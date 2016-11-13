@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="nav_drawer_labels">
+        <item>Начало</item>
+        <item>Задачи</item>
+        <item>Продуктивност</item>
+        <item>Настройки</item>
+        <item>За нас</item>
+    </string-array>
+</resources>
