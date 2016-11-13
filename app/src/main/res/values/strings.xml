@@ -34,4 +34,5 @@
 
     <string name="addNewAchievement">Добави нова награда</string>
     <string name="achievement">Награди</string>
+    <string name="edit">Промени</string>
 </resources>

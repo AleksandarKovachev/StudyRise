@@ -25,7 +25,7 @@ public class ProductivityFragment extends Fragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         mPager = (ViewPager) root.findViewById(R.id.view_pager);
         bubbleTab.setupWithViewPager(mPager);
-        adapter.addFragment(new OverviewProductivityFragment(), "Home");
+        adapter.addFragment(new OverviewProductivityFragment(), "Productivity");
         adapter.addFragment(new ActivFragment(), "Activ");
         adapter.addFragment(new AchievementsFragment(), "Achievements");
         mPager.setAdapter(adapter);
