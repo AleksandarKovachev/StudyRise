@@ -4,22 +4,33 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:text="TextView"
+        android:id="@+id/activTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/activTitle"
-        android:padding="20dp"/>
+        android:layout_alignParentTop="true"
+        android:padding="20dp"
+        android:text="TextView" />
+
+    <ImageView
+        android:id="@+id/activ_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:src="@drawable/ic_fab" />
 
     <TextView
-        android:text="TextView"
+        android:id="@+id/activPoints"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/activPoints"
-        android:padding="20dp"/>
+        android:layout_toLeftOf="@+id/activ_menu"
+        android:layout_toStartOf="@+id/activ_menu"
+        android:padding="20dp"
+        android:text="TextView" />
 </RelativeLayout>

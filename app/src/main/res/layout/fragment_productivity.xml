@@ -16,21 +16,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.github.florent37.bubbletab.BubbleTab
-                android:id="@+id/tab_layout"
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
-                android:elevation="10dp"
-                android:clipToPadding="false"
-                app:layout_collapseMode="pin"
-
-                app:bubbleTab_circleRatio="1.25"
-                app:bubbleTab_circleColor="@color/colorAccent"
-                app:bubbleTab_image0="@drawable/ic_home"
-                app:bubbleTab_image1="@drawable/ic_todo"
-                app:bubbleTab_image2="@drawable/ic_achievements"
-                />
+                android:background="@color/colorPrimaryDark"
+                app:tabGravity="fill"
+                app:tabMode="fixed" />
 
         </android.support.design.widget.AppBarLayout>
 

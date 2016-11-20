@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
     defaultConfig {
         applicationId "bg.softuni.softuniada.studyrise"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -34,4 +34,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.3.+'
 
     compile 'com.github.florent37:bubbletab:1.0.0'
+
+    compile 'com.github.developer-shivam:crescento:1.0.0'
 }

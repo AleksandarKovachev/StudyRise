@@ -10,37 +10,40 @@ public class DBPref extends DBHelper {
         super(context);
     }
 
-    public void addRecord(String database, String value1, String value2) {
+    public void addRecord(String database, String value1, String value2, Long id) {
         ContentValues contentValues = new ContentValues();
 
         if (database.equals("program")) {
+            contentValues.put("_id", id);
             contentValues.put("programName", value1);
             contentValues.put("date", value2);
         } else if (database.equals("activ")) {
             contentValues.put("activTitle", value1);
             contentValues.put("points", value2);
+            contentValues.put("programId", id);
         } else if (database.equals("achievement")) {
             contentValues.put("achievement", value1);
             contentValues.put("points", value2);
+            contentValues.put("programId", id);
         }
 
         this.db.insert(database, null, contentValues);
     }
 
-    public Cursor getVals(String database) {
+    public Cursor getVals(String database, String id) {
         if (database.equals("program"))
-            return this.db.query(database, new String[]{"programName", "date"}, null, null, null, null, null);
+            return this.db.query(database, new String[]{"_id", "programName", "date"}, null, null, null, null, null);
         else if (database.equals("activ"))
-            return this.db.query(database, new String[]{"activTitle", "points"}, null, null, null, null, null);
+            return this.db.query(database, new String[]{"activTitle", "points"}, "programId=?", new String[]{id}, null, null, null);
         else if (database.equals("achievement"))
-            return this.db.query(database, new String[]{"achievement", "points"}, null, null, null, null, null);
+            return this.db.query(database, new String[]{"achievement", "points"}, "programId=?", new String[]{id}, null, null, null);
         else
             return null;
     }
 
-    public void deleteRecord(String database, String value1, String value2) {
+    public void deleteRecord(String database, String row1, String row2, String value1, String value2) {
         db.execSQL("delete from  " + database +
-                " where programName=\'" + value1 +
-                "\' and date = \'" + value2 + "\'");
+                " where " + row1 + "=\'" + value1 +
+                "\' and " + row2 + " = \'" + value2 + "\'");
     }
 }

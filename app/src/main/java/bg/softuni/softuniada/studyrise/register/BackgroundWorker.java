@@ -121,10 +121,13 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         if (type.equals("login")) {
             alertDialog.setTitle("Login Status");
-            alertDialog.setMessage(result);
-            alertDialog.show();
 
-            if (result.equals("login success")) {
+            if (result == null) {
+                alertDialog.setMessage("No connection");
+                alertDialog.show();
+            } else if (result.equals("login success")) {
+                alertDialog.setMessage(result);
+                alertDialog.show();
                 alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
                     public void onCancel(DialogInterface dialog) {

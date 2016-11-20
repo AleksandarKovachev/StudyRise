@@ -50,10 +50,10 @@
             android:id="@+id/addNewAchievement"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/list_achievement"
             android:background="@color/colorPrimary"
             android:text="@string/addNewAchievement"
-            android:textColor="@android:color/white"
-            android:layout_below="@id/list_achievement"/>
+            android:textColor="@android:color/white" />
 
     </RelativeLayout>
 

@@ -1,6 +1,17 @@
 package bg.softuni.softuniada.studyrise;
 
 public class Program {
+
+    private long id;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     private String date;
 
     public String getDate() {

@@ -1,17 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:attribute="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
-        android:text="TextView"
+    <developer.shivam.library.CrescentoContainer
+        android:id="@+id/crescentoContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/programNameOverview" />
+        android:layout_height="350dp"
+        android:elevation="5dp"
+        android:scaleType="centerCrop"
+        attribute:curvature="100dp">
 
-    <Button
-        android:text="back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/back" />
-</LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="20dp"
+                android:text="Точки"
+                android:textColor="@color/colorAccent"
+                android:textSize="25sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/pointsProfile"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/text_radius"
+                    android:fontFamily="cursive"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="60sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </developer.shivam.library.CrescentoContainer>
+
+
+</RelativeLayout>

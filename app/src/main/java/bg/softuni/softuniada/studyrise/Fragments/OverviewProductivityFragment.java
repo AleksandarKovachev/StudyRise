@@ -7,9 +7,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.PopupMenu;
-import android.view.Gravity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +20,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,36 +27,45 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import bg.softuni.softuniada.studyrise.Adapters.ProgramsAdapter;
+import bg.softuni.softuniada.studyrise.Profile;
 import bg.softuni.softuniada.studyrise.Program;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 
-public class OverviewProductivityFragment extends Fragment implements View.OnClickListener {
+public class OverviewProductivityFragment extends Fragment implements View.OnClickListener, FragmentLifecycle {
 
     private Button addProgram;
     private ListView listView;
     private ProgramsAdapter adapter;
     private ArrayList<Program> data;
     public static TextView textView;
+    public static Profile profile;
+    private Program program;
+    private String programId;
+    private boolean inOverview = false;
+
+    private TextView profilePoints;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("ProgramProductivity", 0);
-        String programName = sharedPreferences.getString("program", null);
+        programId = sharedPreferences.getString("program", null);
 
-        if (programName == null) {
+        if (programId == null) {
 
             View root = inflater.inflate(R.layout.fragment_add_program, container, false);
 
             data = new ArrayList<>();
 
             DBPref pref = new DBPref(getContext());
-            Cursor c = pref.getVals("program");
+            Cursor c = pref.getVals("program", null);
 
             if (c.moveToFirst()) {
                 do {
                     Program program = new Program();
+
+                    program.setId((c.getLong(c.getColumnIndex("_id"))));
                     program.setName(c.getString(c.getColumnIndex("programName")));
                     program.setDate(c.getString(c.getColumnIndex("date")));
 
@@ -68,34 +77,33 @@ public class OverviewProductivityFragment extends Fragment implements View.OnCli
             pref.close();
 
             listView = (ListView) root.findViewById(R.id.list_programs);
-            adapter = new ProgramsAdapter(getContext(), R.layout.program_list_item, data);
+            adapter = new ProgramsAdapter(getContext(), R.layout.program_list_item, data, listView);
             listView.setAdapter(adapter);
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Program program = (Program) listView.getItemAtPosition(position);
+                    program = (Program) listView.getItemAtPosition(position);
+
+                    profile = new Profile();
+
+                    profile.setId(program.getId());
+
+                    profile.setPersonalPoints("0", getContext(), "");
+                    profile.setDailyGoals(0 + "");
 
                     SharedPreferences preferences = getContext().getSharedPreferences("ProgramProductivity", 0);
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("program", program.getName().toString());
+                    editor.putString("program", program.getId() + "");
                     editor.commit();
+
 
                     Fragment f;
                     f = new ProductivityFragment();
                     FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body,f);
+                    ft.replace(R.id.container_body, f);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     ft.commit();
-                }
-            });
-
-            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    showPopupMenu(listView, position);
-                    return false;
-
                 }
             });
 
@@ -108,28 +116,36 @@ public class OverviewProductivityFragment extends Fragment implements View.OnCli
         } else {
             View root = inflater.inflate(R.layout.fragment_overview_program, container, false);
 
-            TextView textView = (TextView) root.findViewById(R.id.programNameOverview);
+            inOverview = true;
 
-            textView.setText(programName);
+            profilePoints = (TextView) root.findViewById(R.id.pointsProfile);
 
-            Button button = (Button) root.findViewById(R.id.back);
+            SharedPreferences sharedPreferencesPoints = getContext().getSharedPreferences("ProfilePoints", 0);
+            String points = sharedPreferencesPoints.getString("points", null);
 
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SharedPreferences sharedPreferences = getContext().getSharedPreferences("ProgramProductivity", 0);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.clear();
-                    editor.commit();
+            if (profile == null) {
+                profile = new Profile();
+                profile.setId(Long.parseLong(programId));
+                profile.setPersonalPoints("0", getContext(), "");
+            }
 
-                    Fragment f;
-                    f = new ProductivityFragment();
-                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body,f);
-                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    ft.commit();
-                }
-            });
+            if (points != null) {
+                profilePoints.setText(points.toString());
+                profile.setPersonalPoints(points, getContext(), "");
+            } else {
+
+                if (profile.getPersonalPoints() == null) {
+                    profilePoints.setText("" + profile.getId());
+                    profile.setPersonalPoints("0", getContext(), "");
+                } else
+                    profilePoints.setText(profile.getPersonalPoints());
+            }
+
+            if (profile.getPersonalPoints().toString().length() > 2) {
+                profilePoints.setTextSize(40);
+            } else if (profile.getPersonalPoints().toString().length() > 3) {
+                profilePoints.setTextSize(25);
+            }
 
             return root;
         }
@@ -156,13 +172,15 @@ public class OverviewProductivityFragment extends Fragment implements View.OnCli
                                 //get current date time with Date()
                                 Date date = new Date();
                                 Program program = new Program();
+                                program.setId(data.size());
                                 program.setName(addProgram.getText().toString());
                                 program.setDate(dateFormat.format(date));
-                                data.add(program);
 
                                 DBPref pref = new DBPref(getContext());
-                                pref.addRecord("program", program.getName(), program.getDate());
+                                pref.addRecord("program", program.getName(), program.getDate(), (long) data.size());
                                 pref.close();
+
+                                data.add(program);
 
                                 adapter.notifyDataSetChanged();
                                 listView.invalidate();
@@ -175,47 +193,82 @@ public class OverviewProductivityFragment extends Fragment implements View.OnCli
                             }
                         });
 
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        // show it
+        final AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-    }
 
-    private void showPopupMenu(View view, int position) {
-        // inflate menu
-        PopupMenu popup = new PopupMenu(getContext(), view, Gravity.CENTER);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_edit_delete, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(position));
-        popup.show();
-    }
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
-    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
-        int position;
-
-        public MyMenuItemClickListener(int position) {
-            this.position = position;
+        if (addProgram.getText().toString().isEmpty()) {
+            addProgram.setError("Въведете име на програмата!");
+            alertDialog.getButton(
+                    AlertDialog.BUTTON_POSITIVE).setEnabled(false);
         }
 
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.action_edit:
-                    Toast.makeText(getContext(), "Промени", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.delete:
-                    Program program = (Program) listView.getItemAtPosition(position);
-                    DBPref pref = new DBPref(getContext());
-                    pref.deleteRecord("program", program.getName(), program.getDate());
-                    pref.close();
-                    data.remove(position);
-                    adapter.notifyDataSetChanged();
-                    listView.invalidate();
-                    return true;
-                default:
+        addProgram.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
-            return false;
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().isEmpty()) {
+                    addProgram.setError("Въведете име на програмата!");
+                    alertDialog.getButton(
+                            AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                } else
+                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+            }
+        });
+
+    }
+
+    @Override
+    public void onResumeFragment() {
+        if (profilePoints != null)
+            if (profile.getPersonalPoints() == null) {
+                profilePoints.setText("0");
+                profile.setPersonalPoints("0", getContext(), "init");
+            } else
+                profilePoints.setText(profile.getPersonalPoints());
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        if (inOverview)
+            inflater.inflate(R.menu.menu_program, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.programs) {
+            inOverview = false;
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("ProgramProductivity", 0);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.commit();
+
+            Fragment f;
+            f = new ProductivityFragment();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.container_body, f);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            ft.commit();
         }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public OverviewProductivityFragment() {
+
+        setHasOptionsMenu(true);
     }
 }
