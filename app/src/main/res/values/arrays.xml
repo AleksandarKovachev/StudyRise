@@ -3,8 +3,14 @@
     <string-array name="nav_drawer_labels">
         <item>Начало</item>
         <item>Задачи</item>
-        <item>Продуктивност</item>
+        <item>Мениджмънт</item>
         <item>Настройки</item>
         <item>За нас</item>
+    </string-array>
+
+    <string-array name="programs">
+        <item>Изберете тип:</item>
+        <item>Продуктивност</item>
+        <item>Финанси</item>
     </string-array>
 </resources>

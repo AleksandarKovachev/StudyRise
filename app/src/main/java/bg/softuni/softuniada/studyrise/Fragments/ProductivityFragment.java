@@ -34,7 +34,7 @@ public class ProductivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("ProgramProductivity", 0);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("Program", 0);
         String programName = sharedPreferences.getString("program", null);
 
         data = new ArrayList<>();
@@ -48,6 +48,7 @@ public class ProductivityFragment extends Fragment {
                 program.setId(c.getLong(c.getColumnIndex("_id")));
                 program.setName(c.getString(c.getColumnIndex("programName")));
                 program.setDate(c.getString(c.getColumnIndex("date")));
+                program.setProgram_type(c.getString(c.getColumnIndex("program_type")));
 
                 data.add(program);
             } while (c.moveToNext());

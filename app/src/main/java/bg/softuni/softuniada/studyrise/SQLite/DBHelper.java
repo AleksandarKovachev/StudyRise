@@ -21,7 +21,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table program ("
                 + "_id integer primary key autoincrement, "
                 + "programName text not null, "
-                + "date text not null);");
+                + "date text not null, "
+                + "program_type text not null);");
 
         db.execSQL("create table activ ("
                 + "_id integer primary key autoincrement, "
@@ -56,7 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
-        if(!db.isReadOnly()) {
+        if (!db.isReadOnly()) {
             db.execSQL("PRAGMA foreign_keys=ON;");
             db.setForeignKeyConstraintsEnabled(true);
         }

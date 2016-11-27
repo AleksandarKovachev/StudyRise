@@ -39,13 +39,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <ListView
+        <ExpandableListView
             android:id="@+id/list_activ"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:descendantFocusability="blocksDescendants" />
+            android:descendantFocusability="beforeDescendants" />
 
         <Button
             android:id="@+id/addNewActiv"
@@ -53,10 +53,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/list_activ"
             android:background="@color/colorPrimary"
-            android:text="@string/addNewActiv"
-            android:textColor="@android:color/white"
             android:focusable="false"
-            android:focusableInTouchMode="false"/>
+            android:focusableInTouchMode="false"
+            android:text="@string/addNewActiv"
+            android:textColor="@android:color/white" />
 
     </RelativeLayout>
 

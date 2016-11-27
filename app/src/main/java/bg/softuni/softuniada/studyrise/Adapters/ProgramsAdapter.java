@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import bg.softuni.softuniada.studyrise.Fragments.OverviewProductivityFragment;
+import bg.softuni.softuniada.studyrise.Fragments.Programs;
 import bg.softuni.softuniada.studyrise.Program;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
@@ -53,7 +53,7 @@ public class ProgramsAdapter extends ArrayAdapter<Program> {
         ImageView menu = (ImageView) row.findViewById(R.id.program_menu);
 
         if (data.size() != 0)
-            OverviewProductivityFragment.textView.setText("Добави нова програма");
+            Programs.textView.setText("Добави нова програма");
 
         name.setText(data.get(position).getName());
         date.setText(data.get(position).getDate());

@@ -18,6 +18,7 @@ import android.view.View;
 import bg.softuni.softuniada.studyrise.Adapters.ViewPagerAdapter;
 import bg.softuni.softuniada.studyrise.Fragments.LoginFragment;
 import bg.softuni.softuniada.studyrise.Fragments.ProductivityFragment;
+import bg.softuni.softuniada.studyrise.Fragments.Programs;
 import bg.softuni.softuniada.studyrise.Fragments.QuestionsFragment;
 import bg.softuni.softuniada.studyrise.Fragments.RegistrationFragment;
 import bg.softuni.softuniada.studyrise.Navigation.FragmentDrawer;
@@ -33,48 +34,60 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private boolean log;
+    private String programId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String extra = getIntent().getStringExtra("LOGIN");
+//        String extra = getIntent().getStringExtra("LOGIN");
+//
+//        SharedPreferences pref = getSharedPreferences("MainActivity", 0);
+//        String username = pref.getString("login", null);
+//
+//
+//        if (extra == null && username == null) {
+//            setContentView(R.layout.activity_login_register);
+//
+//            viewPager = (ViewPager) findViewById(R.id.viewpager);
+//            setupViewPager(viewPager);
+//
+//            tabLayout = (TabLayout) findViewById(R.id.tabs);
+//            tabLayout.setupWithViewPager(viewPager);
+//        } else if (extra != null || username != null) {
+        log = true;
+        setContentView(R.layout.activity_main);
 
-        SharedPreferences pref = getSharedPreferences("MainActivity", 0);
-        String username = pref.getString("login", null);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        if (extra == null && username == null) {
-            setContentView(R.layout.activity_login_register);
+        drawerFragment = (FragmentDrawer)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+        drawerFragment.setDrawerListener(this);
 
-            viewPager = (ViewPager) findViewById(R.id.viewpager);
-            setupViewPager(viewPager);
+        Fragment fragment = null;
 
-            tabLayout = (TabLayout) findViewById(R.id.tabs);
-            tabLayout.setupWithViewPager(viewPager);
-        } else if (extra != null || username != null) {
-            log = true;
-            setContentView(R.layout.activity_main);
-
-            mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-            drawerFragment = (FragmentDrawer)
-                    getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-            drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
-            drawerFragment.setDrawerListener(this);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (log)
-            getMenuInflater().inflate(R.menu.menu_loged, menu);
+        SharedPreferences sharedPreferences = getSharedPreferences("Program", 0);
+        programId = sharedPreferences.getString("program", null);
+        if (programId != null)
+            fragment = new ProductivityFragment();
         else
-            getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+            fragment = new Programs();
+
+        if (fragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            getFragmentManager().popBackStackImmediate();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.addToBackStack(null);
+            fragmentManager.popBackStack();
+            fragmentTransaction.replace(R.id.container_body, fragment);
+            fragmentTransaction.commit();
+            getSupportActionBar().setTitle(getString(R.string.app_name));
+        }
+
     }
 
     @Override
@@ -93,16 +106,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             i.putExtra("LOGIN", username);
             startActivity(i);
         }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDrawerItemSelected(View view, int position) {
-        displayView(position);
+        return false;
     }
 
     private void displayView(int position) {
+
         Fragment fragment = null;
         String title = getString(R.string.app_name);
         Intent intent;
@@ -115,7 +123,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new QuestionsFragment();
                 break;
             case 2:
-                fragment = new ProductivityFragment();
+                SharedPreferences sharedPreferences = getSharedPreferences("ProgramProductivity", 0);
+                programId = sharedPreferences.getString("program", null);
+                if (programId != null)
+                    fragment = new ProductivityFragment();
+                else
+                    fragment = new Programs();
                 break;
             default:
                 break;
@@ -147,5 +160,19 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         adapter.addFragment(new LoginFragment(), "Вход");
         adapter.addFragment(new RegistrationFragment(), "Регистрация");
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void onDrawerItemSelected(View view, int position) {
+        displayView(position);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (log)
+            getMenuInflater().inflate(R.menu.menu_loged, menu);
+        else
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 }

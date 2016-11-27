@@ -11,10 +11,9 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
 
@@ -23,11 +22,9 @@ import bg.softuni.softuniada.studyrise.Adapters.ActivAdapter;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 
-import static bg.softuni.softuniada.studyrise.Fragments.OverviewProductivityFragment.profile;
-
 public class ActivFragment extends Fragment implements View.OnClickListener, FragmentLifecycle {
 
-    private ListView listView;
+    private ExpandableListView listView;
     private ActivAdapter adapter;
     private Button inputActiv;
     private ArrayList<Activ> data;
@@ -56,18 +53,10 @@ public class ActivFragment extends Fragment implements View.OnClickListener, Fra
         c.close();
         pref.close();
 
-        listView = (ListView) root.findViewById(R.id.list_activ);
+
+        listView = (ExpandableListView) root.findViewById(R.id.list_activ);
         adapter = new ActivAdapter(getContext(), R.layout.activ_list_item, data, listView);
         listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                profile.setPersonalPoints(data.get(position).getPoints(), getContext(), "activ");
-
-            }
-        });
 
         inputActiv = (Button) root.findViewById(R.id.addNewActiv);
 
@@ -101,7 +90,7 @@ public class ActivFragment extends Fragment implements View.OnClickListener, Fra
                                 data.add(activ);
 
                                 DBPref pref = new DBPref(getContext());
-                                pref.addRecord("activ", activ.getTitle(), activ.getPoints(), programId);
+                                pref.addRecord("activ", activ.getTitle(), activ.getPoints(), "", programId);
                                 pref.close();
 
                                 adapter.notifyDataSetChanged();

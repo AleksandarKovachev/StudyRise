@@ -4,15 +4,15 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="10dp" >
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/textDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="Въведи актив: "
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_gravity="center"/>
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
         android:id="@+id/inputActiv"
@@ -28,15 +28,15 @@
         android:id="@+id/pointsDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="Въведи точки за актива: "
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_gravity="center"/>
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
         android:id="@+id/inputActivPoints"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
-    </EditText>
+        android:gravity="center"
+        android:inputType="numberDecimal|numberSigned" />
 
 </LinearLayout>

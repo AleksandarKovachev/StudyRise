@@ -36,4 +36,5 @@ dependencies {
     compile 'com.github.florent37:bubbletab:1.0.0'
 
     compile 'com.github.developer-shivam:crescento:1.0.0'
+
 }

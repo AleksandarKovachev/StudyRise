@@ -11,10 +11,9 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,11 +23,9 @@ import bg.softuni.softuniada.studyrise.Adapters.AchievementAdapter;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 
-import static bg.softuni.softuniada.studyrise.Fragments.OverviewProductivityFragment.profile;
-
 public class AchievementsFragment extends Fragment implements View.OnClickListener, FragmentLifecycle {
 
-    private ListView listView;
+    private ExpandableListView listView;
     private AchievementAdapter adapter;
     private Button inputActiv;
     private ArrayList<Achievement> data;
@@ -57,18 +54,9 @@ public class AchievementsFragment extends Fragment implements View.OnClickListen
         c.close();
         pref.close();
 
-        listView = (ListView) root.findViewById(R.id.list_achievement);
+        listView = (ExpandableListView) root.findViewById(R.id.list_achievement);
         adapter = new AchievementAdapter(getContext(), R.layout.activ_list_item, data, listView);
         listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                profile.setPersonalPoints(data.get(position).getPoints(), getContext(), "achievement");
-
-            }
-        });
 
         inputActiv = (Button) root.findViewById(R.id.addNewAchievement);
 
@@ -108,7 +96,7 @@ public class AchievementsFragment extends Fragment implements View.OnClickListen
                                 data.add(achievement);
 
                                 DBPref pref = new DBPref(getContext());
-                                pref.addRecord("achievement", achievement.getTitle(), achievement.getPoints(), programId);
+                                pref.addRecord("achievement", achievement.getTitle(), achievement.getPoints(), "", programId);
                                 pref.close();
 
                                 adapter.notifyDataSetChanged();
