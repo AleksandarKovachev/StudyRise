@@ -1,5 +1,6 @@
 package bg.softuni.softuniada.studyrise.Fragments;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import bg.softuni.softuniada.studyrise.Adapters.ProfitAdapter;
 import bg.softuni.softuniada.studyrise.Finance;
 import bg.softuni.softuniada.studyrise.R;
+import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class Expense extends Fragment {
@@ -29,6 +31,22 @@ public class Expense extends Fragment {
         recyclerView = (RecyclerView) root.findViewById(R.id.expense_recycler_view);
 
         listFinances = new ArrayList<>();
+
+        DBPref pref = new DBPref(getContext());
+        Cursor c = pref.getVals("profit_expense", "Разход");
+
+        if (c.moveToFirst()) {
+            do {
+                Finance finance = new Finance();
+                finance.setType(c.getString(c.getColumnIndex("type")));
+                finance.setName(c.getString(c.getColumnIndex("name")));
+                finance.setValue(c.getDouble(c.getColumnIndex("value")));
+                listFinances.add(finance);
+            } while (c.moveToNext());
+        }
+
+        c.close();
+        pref.close();
 
         ProfitAdapter profitAdapter = new ProfitAdapter(getContext(), listFinances);
         recyclerView.setAdapter(profitAdapter);

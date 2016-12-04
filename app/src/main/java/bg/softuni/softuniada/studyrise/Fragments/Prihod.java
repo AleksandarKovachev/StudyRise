@@ -17,7 +17,7 @@ import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
-public class Priohod extends Fragment {
+public class Prihod extends Fragment {
 
     private RecyclerView recyclerView;
 

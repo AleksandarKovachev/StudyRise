@@ -12,7 +12,7 @@ import java.util.List;
 import bg.softuni.softuniada.studyrise.Activities.ScreenSlidePagerActivity;
 import bg.softuni.softuniada.studyrise.Finance;
 import bg.softuni.softuniada.studyrise.Fragments.Price;
-import bg.softuni.softuniada.studyrise.Fragments.Priohod;
+import bg.softuni.softuniada.studyrise.Fragments.Prihod;
 import bg.softuni.softuniada.studyrise.Fragments.Razhod;
 import bg.softuni.softuniada.studyrise.R;
 
@@ -68,7 +68,7 @@ public class FinanceAdapter extends RecyclerView.Adapter<FinanceAdapter.ViewHold
                     ScreenSlidePagerActivity.mPager.setCurrentItem(ScreenSlidePagerActivity.mPager.getCurrentItem() + 1);
                 } else if (textView.getText().toString().equals("Приход")) {
                     type = textView.getText().toString();
-                    ScreenSlidePagerActivity.mPagerAdapter.addFragment(new Priohod());
+                    ScreenSlidePagerActivity.mPagerAdapter.addFragment(new Prihod());
                     ScreenSlidePagerActivity.mPager.setCurrentItem(ScreenSlidePagerActivity.mPager.getCurrentItem() + 1);
                 } else {
                     category = textView.getText().toString();
