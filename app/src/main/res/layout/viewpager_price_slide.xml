@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColorHint="@color/icons">
+
+            <EditText
+                android:id="@+id/value_finance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/icons"
+                android:ems="6"
+                android:gravity="center"
+                android:hint="лева"
+                android:inputType="numberDecimal"
+                android:textColor="@color/icons"
+                android:textColorHint="@color/icons" />
+
+        </android.support.design.widget.TextInputLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rand"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:paddingTop="40dp">
+
+        <Button
+            android:id="@+id/add_finance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:background="@color/background"
+            android:gravity="center"
+            android:text="Добави"
+            android:textColor="@color/icons" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/price_finance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rand"
+        android:layout_centerHorizontal="true"
+        android:padding="20dp"
+        android:text="Разход"
+        android:textColor="@color/icons"
+        android:textSize="25sp" />
+
+</RelativeLayout>

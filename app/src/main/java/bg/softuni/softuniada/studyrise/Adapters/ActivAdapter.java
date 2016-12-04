@@ -37,9 +37,7 @@ public class ActivAdapter extends BaseExpandableListAdapter {
     private ExpandableListView listView;
     private String number;
     private String finalNumber;
-    private int gp, chp;
-    private EditText num;
-    private TextView finalTextView;
+
 
     public ActivAdapter(Context context, int resource, List<Activ> objects, ExpandableListView listView) {
         this.context = context;
@@ -126,6 +124,7 @@ public class ActivAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
+        final int gp, chp;
         gp = groupPosition;
         chp = childPosition;
 
@@ -136,6 +135,9 @@ public class ActivAdapter extends BaseExpandableListAdapter {
         }
 
         Button runPoints = (Button) convertView.findViewById(R.id.runPoints);
+
+        final EditText num;
+        final TextView finalTextView;
         num = (EditText) convertView.findViewById(R.id.quantity);
 
         num.setOnTouchListener(new View.OnTouchListener() {
@@ -171,8 +173,6 @@ public class ActivAdapter extends BaseExpandableListAdapter {
         } else {
             finalTextView.setText(" = " + ((Integer.parseInt(number.toString())) * (Integer.parseInt(getChild(gp, chp).toString()))) + "");
         }
-
-        Toast.makeText(context, data.get(childPosition).getPoints() + "\t" + Integer.parseInt(getChild(gp, chp).toString()), Toast.LENGTH_SHORT).show();
 
         runPoints.setOnClickListener(new View.OnClickListener() {
             @Override

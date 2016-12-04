@@ -62,7 +62,6 @@ public class ActivFragment extends Fragment implements View.OnClickListener, Fra
 
         inputActiv.setOnClickListener(this);
 
-
         return root;
     }
 

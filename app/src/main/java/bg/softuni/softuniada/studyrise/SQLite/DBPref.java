@@ -26,6 +26,11 @@ public class DBPref extends DBHelper {
             contentValues.put("achievement", value1);
             contentValues.put("points", value2);
             contentValues.put("programId", id);
+        } else if (database.equals("profit_expense")) {
+            contentValues.put("type", value1);
+            contentValues.put("name", value2);
+            contentValues.put("value", Double.parseDouble(value3));
+            contentValues.put("programId", id);
         }
         this.db.insert(database, null, contentValues);
     }
@@ -37,6 +42,10 @@ public class DBPref extends DBHelper {
             return this.db.query(database, new String[]{"activTitle", "points"}, "programId=?", new String[]{id}, null, null, null);
         else if (database.equals("achievement"))
             return this.db.query(database, new String[]{"achievement", "points"}, "programId=?", new String[]{id}, null, null, null);
+        else if (database.equals("finance"))
+            return this.db.query(database, new String[]{"name"}, "type=?", new String[]{id}, null, null, null);
+        else if (database.equals("profit_expense"))
+            return this.db.query(database, new String[]{"type", "name", "value"}, "type=?", new String[]{id}, null, null, null);
         else
             return null;
     }

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">>
     <string name="app_name">StudyRise</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -36,4 +36,8 @@
     <string name="achievement">Награди</string>
     <string name="edit">Промени</string>
     <string name="programs">Програми</string>
+
+    <string name="title_template_step">Step <xliff:g id="step_number">%1$d</xliff:g>: Lorem
+        Ipsum</string>
+
 </resources>

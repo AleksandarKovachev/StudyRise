@@ -68,14 +68,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
 
-        Fragment fragment = null;
-
-        SharedPreferences sharedPreferences = getSharedPreferences("Program", 0);
-        programId = sharedPreferences.getString("program", null);
-        if (programId != null)
-            fragment = new ProductivityFragment();
-        else
-            fragment = new Programs();
+        Fragment fragment = new Programs();
 
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();

@@ -37,8 +37,6 @@ public class AchievementAdapter extends BaseExpandableListAdapter {
     private String number;
     private String finalNumber;
     private ExpandableListView listView;
-    private int gp, chp;
-    private TextView finalTextView;
 
     public AchievementAdapter(Context context, int resource, List<Achievement> objects, ExpandableListView listView) {
         this.context = context;
@@ -128,6 +126,9 @@ public class AchievementAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+
+        final int gp, chp;
+
         gp = groupPosition;
         chp = childPosition;
 
@@ -147,6 +148,8 @@ public class AchievementAdapter extends BaseExpandableListAdapter {
                 return false;
             }
         });
+
+        final TextView finalTextView;
 
         finalTextView = (TextView) convertView.findViewById(R.id.finalPoints);
 

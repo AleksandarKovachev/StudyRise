@@ -1,58 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:attribute="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <developer.shivam.library.CrescentoContainer
-        android:id="@+id/crescentoContainer"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:elevation="5dp"
-        android:scaleType="centerCrop"
-        attribute:curvature="100dp">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
+            <developer.shivam.library.CrescentoContainer
+                android:id="@+id/crescentoContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary" />
+                android:layout_height="350dp"
+                android:elevation="5dp"
+                android:scaleType="centerCrop"
+                attribute:curvature="100dp">
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:paddingTop="20dp"
-                android:text="Точки"
-                android:textColor="@color/colorAccent"
-                android:textSize="25sp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:paddingTop="20dp"
+                        android:text="Точки"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="25sp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/pointsProfile"
+                            android:layout_width="160dp"
+                            android:layout_height="160dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/text_radius"
+                            android:fontFamily="cursive"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="60sp" />
+                    </RelativeLayout>
+                </RelativeLayout>
+
+            </developer.shivam.library.CrescentoContainer>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center">
+                android:layout_below="@id/crescentoContainer">
 
                 <TextView
-                    android:id="@+id/pointsProfile"
-                    android:layout_width="160dp"
-                    android:layout_height="160dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/text_radius"
-                    android:fontFamily="cursive"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="60sp" />
+                    android:id="@+id/elena"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:foregroundGravity="center"
+                    android:gravity="center"
+                    android:text="Здравей, Елена!"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="40sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_below="@id/elena"
+                    android:src="@mipmap/ic_panda"
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true"/>
             </RelativeLayout>
         </RelativeLayout>
-
-    </developer.shivam.library.CrescentoContainer>
+    </ScrollView>
 
 
 </RelativeLayout>

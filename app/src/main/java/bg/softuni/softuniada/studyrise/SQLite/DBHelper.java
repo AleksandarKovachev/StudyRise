@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
     static final String DB_NAME = "studyrise";
-    static final int CURRENT_VERSION = 1;
+    static final int CURRENT_VERSION = 2;
     protected SQLiteDatabase db;
 
     public DBHelper(Context context) {
@@ -39,15 +39,52 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "FOREIGN KEY(programId) REFERENCES program(_id) "
                 + "ON DELETE CASCADE);");
 
+        db.execSQL("create table finance ("
+                + "_id integer primary key autoincrement, "
+                + "type text not null, "
+                + "name text not null);");
+
+        db.execSQL("INSERT INTO finance VALUES(null, 'Разход', 'Храна');");
+        db.execSQL("INSERT INTO finance VALUES(null, 'Разход', 'Транспорт');");
+        db.execSQL("INSERT INTO finance VALUES(null, 'Разход', 'Интернет');");
+        db.execSQL("INSERT INTO finance VALUES(null, 'Приход', 'Родители');");
+        db.execSQL("INSERT INTO finance VALUES(null, 'Приход', 'Стипендия');");
+        db.execSQL("INSERT INTO finance VALUES(null, 'Приход', 'Заплата');");
+
+        db.execSQL("create table profit_expense ("
+                + "_id integer primary key autoincrement, "
+                + "type text not null, "
+                + "name text not null, "
+                + "value real not null, "
+                + "programId integer, "
+                + "FOREIGN KEY(programId) REFERENCES program(_id) "
+                + "ON DELETE CASCADE);");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + "program");
-        db.execSQL("DROP TABLE IF EXISTS " + "activ");
-        db.execSQL("DROP TABLE IF EXISTS " + "achievement");
+        if (oldVersion < 2) {
+            db.execSQL("create table finance ("
+                    + "_id integer primary key autoincrement, "
+                    + "type text not null, "
+                    + "name text not null);");
 
-        onCreate(db);
+            db.execSQL("INSERT INTO finance VALUES(null, 'Разход', 'Храна');");
+            db.execSQL("INSERT INTO finance VALUES(null, 'Разход', 'Транспорт');");
+            db.execSQL("INSERT INTO finance VALUES(null, 'Разход', 'Интернет');");
+            db.execSQL("INSERT INTO finance VALUES(null, 'Приход', 'Родители');");
+            db.execSQL("INSERT INTO finance VALUES(null, 'Приход', 'Стипендия');");
+            db.execSQL("INSERT INTO finance VALUES(null, 'Приход', 'Заплата');");
+
+            db.execSQL("create table profit_expense ("
+                    + "_id integer primary key autoincrement, "
+                    + "type text not null, "
+                    + "name text not null, "
+                    + "value real not null, "
+                    + "programId integer, "
+                    + "FOREIGN KEY(programId) REFERENCES program(_id) "
+                    + "ON DELETE CASCADE);");
+        }
     }
 
     public void open() throws SQLException {

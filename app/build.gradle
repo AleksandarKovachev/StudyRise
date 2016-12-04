@@ -37,4 +37,7 @@ dependencies {
 
     compile 'com.github.developer-shivam:crescento:1.0.0'
 
+    // recyclerview animation
+
+    compile 'jp.wasabeef:recyclerview-animators:2.2.3'
 }
