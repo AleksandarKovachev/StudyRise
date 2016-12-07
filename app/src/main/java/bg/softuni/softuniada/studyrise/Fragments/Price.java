@@ -40,6 +40,14 @@ public class Price extends Fragment {
                 pref.addRecord("profit_expense", FinanceAdapter.getType(), FinanceAdapter.getCategory(), value, Long.parseLong(programId));
                 pref.close();
 
+                if (FinanceAdapter.getType().equals("Приход")) {
+                    Profit.profitAdapter.notifyDataSetChanged();
+                    Profit.recyclerView.invalidate();
+                } else {
+                    Expense.profitAdapter.notifyDataSetChanged();
+                    Expense.recyclerView.invalidate();
+                }
+
                 getActivity().finish();
                 getActivity().overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
             }

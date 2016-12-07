@@ -16,13 +16,24 @@
         android:padding="20dp"
         android:textColor="@color/icons" />
 
-    <TextView
-        android:id="@+id/value_finance"
+    <ImageView
+        android:id="@+id/finance_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:paddingRight="10dp"
+        android:paddingTop="20dp"
+        android:src="@drawable/ic_menu" />
+
+    <TextView
+        android:id="@+id/value_finance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/finance_menu"
+        android:layout_toStartOf="@+id/finance_menu"
         android:padding="20dp"
         android:textColor="@color/icons" />
 </RelativeLayout>

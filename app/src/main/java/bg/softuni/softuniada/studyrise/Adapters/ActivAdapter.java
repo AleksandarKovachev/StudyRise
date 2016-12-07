@@ -52,7 +52,6 @@ public class ActivAdapter extends BaseExpandableListAdapter {
         inflater.inflate(R.menu.menu_edit_delete, popup.getMenu());
         popup.setOnMenuItemClickListener(new ActivAdapter.MyMenuItemClickListener(position));
         popup.show();
-        System.out.println(position);
     }
 
     @Override
@@ -98,7 +97,7 @@ public class ActivAdapter extends BaseExpandableListAdapter {
 
         TextView title = (TextView) row.findViewById(R.id.activTitle);
         TextView points = (TextView) row.findViewById(R.id.activPoints);
-        ImageView menu = (ImageView) row.findViewById(R.id.activ_menu);
+        ImageView menu = (ImageView) row.findViewById(R.id.finance_menu);
 
         title.setText(data.get(groupPosition).getTitle());
         points.setText(data.get(groupPosition).getPoints());

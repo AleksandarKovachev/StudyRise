@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import bg.softuni.softuniada.studyrise.Adapters.ProfitAdapter;
+import bg.softuni.softuniada.studyrise.Adapters.ProfitExpenseAdapter;
 import bg.softuni.softuniada.studyrise.Finance;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
@@ -19,7 +19,9 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class Expense extends Fragment {
 
-    private RecyclerView recyclerView;
+    public static RecyclerView recyclerView;
+
+    public static ProfitExpenseAdapter profitAdapter;
 
     private ArrayList<Finance> listFinances;
 
@@ -48,7 +50,7 @@ public class Expense extends Fragment {
         c.close();
         pref.close();
 
-        ProfitAdapter profitAdapter = new ProfitAdapter(getContext(), listFinances);
+        profitAdapter = new ProfitExpenseAdapter(getContext(), listFinances, recyclerView);
         recyclerView.setAdapter(profitAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

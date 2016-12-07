@@ -9,9 +9,18 @@
         android:id="@+id/finance_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foregroundGravity="center"
-        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:foregroundGravity="center" />
+
+    <Button
+        android:id="@+id/add_items_finance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/finance_recycler_view"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/ic_add_finances"
+        android:visibility="invisible" />
 
 </RelativeLayout>

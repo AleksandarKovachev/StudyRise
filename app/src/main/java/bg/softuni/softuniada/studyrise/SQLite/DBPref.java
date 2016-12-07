@@ -31,6 +31,9 @@ public class DBPref extends DBHelper {
             contentValues.put("name", value2);
             contentValues.put("value", Double.parseDouble(value3));
             contentValues.put("programId", id);
+        } else if (database.equals("finance")) {
+            contentValues.put("type", value1);
+            contentValues.put("name", value2);
         }
         this.db.insert(database, null, contentValues);
     }
