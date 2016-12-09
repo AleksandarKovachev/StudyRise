@@ -18,7 +18,7 @@ import bg.softuni.softuniada.studyrise.database.Downloader;
 
 public class QuestionsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private String urlAddress = "http://quotes.comlu.com/questions.php";
+    private String urlAddress = "http://192.168.0.106/studyrice/questions.php";
     private String type = "questions";
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;

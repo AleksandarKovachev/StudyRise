@@ -61,29 +61,29 @@
 
             </developer.shivam.library.CrescentoContainer>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/crescentoContainer">
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_below="@id/crescentoContainer">-->
 
-                <TextView
-                    android:id="@+id/elena"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:foregroundGravity="center"
-                    android:gravity="center"
-                    android:text="Здравей, Елена!"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="40sp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/elena"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:foregroundGravity="center"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="Здравей, Елена!"-->
+                    <!--android:textColor="@color/colorAccent"-->
+                    <!--android:textSize="40sp" />-->
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:layout_below="@id/elena"
-                    android:src="@mipmap/ic_panda"
-                    android:scaleType="fitXY"
-                    android:adjustViewBounds="true"/>
-            </RelativeLayout>
+                <!--<ImageView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="400dp"-->
+                    <!--android:layout_below="@id/elena"-->
+                    <!--android:src="@mipmap/ic_panda"-->
+                    <!--android:scaleType="fitXY"-->
+                    <!--android:adjustViewBounds="true"/>-->
+            <!--</RelativeLayout>-->
         </RelativeLayout>
     </ScrollView>
 

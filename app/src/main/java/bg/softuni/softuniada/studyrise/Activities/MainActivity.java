@@ -55,32 +55,31 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 //            tabLayout = (TabLayout) findViewById(R.id.tabs);
 //            tabLayout.setupWithViewPager(viewPager);
 //        } else if (extra != null || username != null) {
-        log = true;
-        setContentView(R.layout.activity_main);
+            log = true;
+            setContentView(R.layout.activity_main);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        drawerFragment = (FragmentDrawer)
-                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-        drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
-        drawerFragment.setDrawerListener(this);
+            drawerFragment = (FragmentDrawer)
+                    getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+            drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+            drawerFragment.setDrawerListener(this);
 
-        Fragment fragment = new Programs();
+            Fragment fragment = new Programs();
 
-        if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            getFragmentManager().popBackStackImmediate();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.addToBackStack(null);
-            fragmentManager.popBackStack();
-            fragmentTransaction.replace(R.id.container_body, fragment);
-            fragmentTransaction.commit();
-            getSupportActionBar().setTitle(getString(R.string.app_name));
-        }
-
+            if (fragment != null) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                getFragmentManager().popBackStackImmediate();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentManager.popBackStack();
+                fragmentTransaction.replace(R.id.container_body, fragment);
+                fragmentTransaction.commit();
+                getSupportActionBar().setTitle(getString(R.string.app_name));
+            }
     }
 
     @Override
