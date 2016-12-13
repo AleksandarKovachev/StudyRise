@@ -3,6 +3,8 @@ package bg.softuni.softuniada.studyrise;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import bg.softuni.softuniada.studyrise.Activities.MainActivity;
+
 public class Profile {
     private String personalPoints;
     private String dailyGoals;
@@ -22,9 +24,9 @@ public class Profile {
     }
 
     public void setPersonalPoints(String personalPoints, Context context, String string) {
-        if (getPersonalPoints() == null)
+        if (getPersonalPoints() == null) {
             this.personalPoints = personalPoints;
-        else {
+        } else {
 
             int a = Integer.parseInt(personalPoints);
             int b = Integer.parseInt(getPersonalPoints());
@@ -37,9 +39,8 @@ public class Profile {
                 savePoints(context);
             } else
                 this.personalPoints = personalPoints;
-
-
         }
+        MainActivity.setText(personalPoints);
     }
 
     private void savePoints(Context context) {

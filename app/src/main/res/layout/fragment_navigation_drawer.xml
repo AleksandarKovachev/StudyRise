@@ -7,9 +7,36 @@
     <RelativeLayout
         android:id="@+id/nav_header_container"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/tmptext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="Точки:"
+            android:textColor="@color/icons"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/menu_points"
+            android:paddingTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/icons"
+            android:textSize="50sp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@id/menu_points"
+            android:background="@drawable/ic_statistic" />
 
     </RelativeLayout>
 
@@ -19,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/nav_header_container"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp" />
 
 
 </RelativeLayout>

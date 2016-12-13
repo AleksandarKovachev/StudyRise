@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import bg.softuni.softuniada.studyrise.Adapters.ViewPagerAdapter;
+import bg.softuni.softuniada.studyrise.FragmentLifecycle;
 import bg.softuni.softuniada.studyrise.Program;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;

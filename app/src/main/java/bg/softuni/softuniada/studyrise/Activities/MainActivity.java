@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import bg.softuni.softuniada.studyrise.Adapters.ViewPagerAdapter;
 import bg.softuni.softuniada.studyrise.Fragments.LoginFragment;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private boolean log;
     private String programId;
 
+    private static TextView textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,31 +58,39 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 //            tabLayout = (TabLayout) findViewById(R.id.tabs);
 //            tabLayout.setupWithViewPager(viewPager);
 //        } else if (extra != null || username != null) {
-            log = true;
-            setContentView(R.layout.activity_main);
+        log = true;
+        setContentView(R.layout.activity_main);
 
-            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-            drawerFragment = (FragmentDrawer)
-                    getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-            drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
-            drawerFragment.setDrawerListener(this);
+        drawerFragment = (FragmentDrawer)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+        drawerFragment.setDrawerListener(this);
 
-            Fragment fragment = new Programs();
+        SharedPreferences sharedPreferencesPoints = getSharedPreferences("ProfilePoints", 0);
+        String points = sharedPreferencesPoints.getString("points", null);
 
-            if (fragment != null) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                getFragmentManager().popBackStackImmediate();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentManager.popBackStack();
-                fragmentTransaction.replace(R.id.container_body, fragment);
-                fragmentTransaction.commit();
-                getSupportActionBar().setTitle(getString(R.string.app_name));
-            }
+        textView = (TextView) findViewById(R.id.menu_points);
+
+        if (points != null)
+            textView.setText(points);
+
+        Fragment fragment = new Programs();
+
+        if (fragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            getFragmentManager().popBackStackImmediate();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.addToBackStack(null);
+            fragmentManager.popBackStack();
+            fragmentTransaction.replace(R.id.container_body, fragment);
+            fragmentTransaction.commit();
+            getSupportActionBar().setTitle(getString(R.string.app_name));
+        }
     }
 
     @Override
@@ -166,5 +177,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         else
             getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    public static void setText(String text) {
+        textView.setText(text);
     }
 }

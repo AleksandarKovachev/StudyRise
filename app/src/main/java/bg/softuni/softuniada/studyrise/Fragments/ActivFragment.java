@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import bg.softuni.softuniada.studyrise.Activ;
 import bg.softuni.softuniada.studyrise.Adapters.ActivAdapter;
+import bg.softuni.softuniada.studyrise.FragmentLifecycle;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 

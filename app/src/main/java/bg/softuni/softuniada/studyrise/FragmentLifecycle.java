@@ -1,4 +1,4 @@
-package bg.softuni.softuniada.studyrise.Fragments;
+package bg.softuni.softuniada.studyrise;
 
 public interface FragmentLifecycle {
 

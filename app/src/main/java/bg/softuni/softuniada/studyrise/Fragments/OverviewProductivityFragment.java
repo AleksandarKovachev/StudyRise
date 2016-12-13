@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import bg.softuni.softuniada.studyrise.Activities.MainActivity;
+import bg.softuni.softuniada.studyrise.FragmentLifecycle;
 import bg.softuni.softuniada.studyrise.Profile;
 import bg.softuni.softuniada.studyrise.R;
 
@@ -48,12 +50,14 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
 
         if (points != null) {
             profilePoints.setText(points.toString());
+            MainActivity.setText(points.toString());
             profile.setPersonalPoints(points, getContext(), "");
         } else {
 
             if (profile.getPersonalPoints() == null) {
                 profilePoints.setText("" + profile.getId());
                 profile.setPersonalPoints("0", getContext(), "");
+                MainActivity.setText("" + profile.getId());
             } else
                 profilePoints.setText(profile.getPersonalPoints());
         }

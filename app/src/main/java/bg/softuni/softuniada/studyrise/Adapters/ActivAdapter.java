@@ -2,6 +2,7 @@ package bg.softuni.softuniada.studyrise.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
@@ -123,6 +124,7 @@ public class ActivAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
+        final View view = convertView;
         final int gp, chp;
         gp = groupPosition;
         chp = childPosition;
@@ -178,6 +180,7 @@ public class ActivAdapter extends BaseExpandableListAdapter {
             public void onClick(View v) {
                 if (number == null)
                     number = "1";
+                Snackbar.make(view, "ИЗПЪЛНЕНО.", Snackbar.LENGTH_LONG).show();
                 finalNumber = (Integer.parseInt(number.toString())) * (Integer.parseInt(getChild(gp, chp).toString())) + "";
                 profile.setPersonalPoints(finalNumber, context, "activ");
             }

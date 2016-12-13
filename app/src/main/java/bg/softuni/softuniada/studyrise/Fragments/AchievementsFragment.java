@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import bg.softuni.softuniada.studyrise.Achievement;
 import bg.softuni.softuniada.studyrise.Adapters.AchievementAdapter;
+import bg.softuni.softuniada.studyrise.FragmentLifecycle;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 
