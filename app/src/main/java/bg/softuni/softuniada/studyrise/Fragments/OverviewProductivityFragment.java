@@ -1,9 +1,12 @@
 package bg.softuni.softuniada.studyrise.Fragments;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,16 +15,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import bg.softuni.softuniada.studyrise.Activities.MainActivity;
+import bg.softuni.softuniada.studyrise.Adapters.HistoryAdapter;
 import bg.softuni.softuniada.studyrise.FragmentLifecycle;
+import bg.softuni.softuniada.studyrise.History;
 import bg.softuni.softuniada.studyrise.Profile;
 import bg.softuni.softuniada.studyrise.R;
+import bg.softuni.softuniada.studyrise.SQLite.DBPref;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class OverviewProductivityFragment extends Fragment implements FragmentLifecycle {
 
     public static Profile profile;
     private String programId;
     private boolean inOverview = false;
+
+    private RecyclerView recyclerView;
+    private HistoryAdapter adapter;
+    private List<History> list;
 
     private TextView profilePoints;
 
@@ -67,6 +81,33 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
         } else if (profile.getPersonalPoints().toString().length() > 3) {
             profilePoints.setTextSize(25);
         }
+
+        recyclerView = (RecyclerView) root.findViewById(R.id.history_recycler_view);
+        list = new ArrayList<>();
+
+        DBPref pref = new DBPref(getContext());
+        Cursor c = pref.getVals("history", programId);
+
+        if (c.moveToFirst()) {
+            do {
+                History history = new History();
+                history.setType(c.getString(c.getColumnIndex("type")));
+                history.setName(c.getString(c.getColumnIndex("name")));
+                history.setDate(c.getString(c.getColumnIndex("date")));
+                history.setPoints(c.getString(c.getColumnIndex("points")));
+                list.add(history);
+            } while (c.moveToNext());
+        }
+        c.close();
+        pref.close();
+
+        adapter = new HistoryAdapter(getContext(), list, recyclerView);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setNestedScrollingEnabled(false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new SlideInUpAnimator());
 
         return root;
     }

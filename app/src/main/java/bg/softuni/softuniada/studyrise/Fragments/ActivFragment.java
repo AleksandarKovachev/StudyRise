@@ -56,7 +56,7 @@ public class ActivFragment extends Fragment implements View.OnClickListener, Fra
 
 
         listView = (ExpandableListView) root.findViewById(R.id.list_activ);
-        adapter = new ActivAdapter(getContext(), R.layout.activ_list_item, data, listView);
+        adapter = new ActivAdapter(getContext(), R.layout.activ_list_item, data, listView, programId + "");
         listView.setAdapter(adapter);
 
         inputActiv = (Button) root.findViewById(R.id.addNewActiv);
@@ -90,7 +90,7 @@ public class ActivFragment extends Fragment implements View.OnClickListener, Fra
                                 data.add(activ);
 
                                 DBPref pref = new DBPref(getContext());
-                                pref.addRecord("activ", activ.getTitle(), activ.getPoints(), "", programId);
+                                pref.addRecord(programId, "activ", activ.getTitle(), activ.getPoints());
                                 pref.close();
 
                                 adapter.notifyDataSetChanged();

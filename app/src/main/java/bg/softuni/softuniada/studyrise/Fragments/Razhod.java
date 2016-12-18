@@ -105,7 +105,7 @@ public class Razhod extends Fragment implements View.OnClickListener {
                                 finance.setName(addFinanceItem.getText().toString());
 
                                 DBPref pref = new DBPref(getContext());
-                                pref.addRecord("finance", finance.getType(), finance.getName(), null, null);
+                                pref.addRecord(null, "finance", finance.getType(), finance.getName());
                                 pref.close();
 
                                 listFinances.add(finance);

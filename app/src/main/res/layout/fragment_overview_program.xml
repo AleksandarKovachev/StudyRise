@@ -5,13 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <developer.shivam.library.CrescentoContainer
                 android:id="@+id/crescentoContainer"
@@ -61,31 +62,23 @@
 
             </developer.shivam.library.CrescentoContainer>
 
-            <!--<RelativeLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_below="@id/crescentoContainer">-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/crescentoContainer">
 
-                <!--<TextView-->
-                    <!--android:id="@+id/elena"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:foregroundGravity="center"-->
-                    <!--android:gravity="center"-->
-                    <!--android:text="Здравей, Елена!"-->
-                    <!--android:textColor="@color/colorAccent"-->
-                    <!--android:textSize="40sp" />-->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/history_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:foregroundGravity="center" />
 
-                <!--<ImageView-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="400dp"-->
-                    <!--android:layout_below="@id/elena"-->
-                    <!--android:src="@mipmap/ic_panda"-->
-                    <!--android:scaleType="fitXY"-->
-                    <!--android:adjustViewBounds="true"/>-->
-            <!--</RelativeLayout>-->
-        </RelativeLayout>
-    </ScrollView>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 
 </RelativeLayout>

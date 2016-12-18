@@ -7,17 +7,16 @@
     android:focusable="true">
 
     <TextView
-        android:id="@+id/name_finance"
+        android:id="@+id/history_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_toLeftOf="@+id/value_finance"
-        android:padding="20dp"
-        android:textColor="@color/icons" />
+        android:padding="20dp" />
 
     <ImageView
-        android:id="@+id/finance_menu"
+        android:id="@+id/history_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -25,25 +24,24 @@
         android:layout_alignParentTop="true"
         android:paddingRight="10dp"
         android:paddingTop="20dp"
-        android:src="@drawable/ic_menu" />
+        android:src="@drawable/ic_fab" />
 
     <TextView
-        android:id="@+id/date"
+        android:id="@+id/history_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/finance_menu"
+        android:layout_toLeftOf="@+id/history_menu"
+        android:layout_toStartOf="@+id/history_menu"
         android:paddingTop="10dp"
-        android:textColor="@color/icons"
         android:textSize="10sp" />
 
     <TextView
-        android:id="@+id/value_finance"
+        android:id="@+id/history_points"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/date"
-        android:layout_toLeftOf="@+id/finance_menu"
-        android:layout_toStartOf="@+id/finance_menu"
-        android:padding="5dp"
-        android:textColor="@color/icons" />
+        android:layout_alignBaseline="@+id/history_name"
+        android:layout_alignBottom="@+id/history_date"
+        android:layout_alignEnd="@+id/history_date"
+        android:layout_alignRight="@+id/history_date"
+        android:padding="5dp" />
 </RelativeLayout>

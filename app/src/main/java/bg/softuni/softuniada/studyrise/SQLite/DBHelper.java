@@ -5,10 +5,13 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class DBHelper extends SQLiteOpenHelper {
 
     static final String DB_NAME = "studyrise";
-    static final int CURRENT_VERSION = 2;
+    static final int CURRENT_VERSION = 4;
     protected SQLiteDatabase db;
 
     public DBHelper(Context context) {
@@ -57,6 +60,17 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "name text not null, "
                 + "value real not null, "
                 + "programId integer, "
+                + "date text not null, "
+                + "FOREIGN KEY(programId) REFERENCES program(_id) "
+                + "ON DELETE CASCADE);");
+
+        db.execSQL("create table history ("
+                + "_id integer primary key autoincrement, "
+                + "type text not null, "
+                + "name text not null, "
+                + "date text not null, "
+                + "programId integer, "
+                + "points text not null, "
                 + "FOREIGN KEY(programId) REFERENCES program(_id) "
                 + "ON DELETE CASCADE);");
     }
@@ -81,6 +95,25 @@ public class DBHelper extends SQLiteOpenHelper {
                     + "type text not null, "
                     + "name text not null, "
                     + "value real not null, "
+                    + "programId integer, "
+                    + "FOREIGN KEY(programId) REFERENCES program(_id) "
+                    + "ON DELETE CASCADE);");
+        }
+
+        if (oldVersion < 3) {
+            String datePattern = "HH:mm:ss EEE dd MMM yyyy";
+            SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+            String date = dateFormat.format(new Date(System.currentTimeMillis()));
+            db.execSQL("ALTER TABLE profit_expense ADD COLUMN date text DEFAULT ('" + date + "');");
+        }
+
+        if (oldVersion < 4) {
+            db.execSQL("create table history ("
+                    + "_id integer primary key autoincrement, "
+                    + "type text not null, "
+                    + "name text not null, "
+                    + "date text not null, "
+                    + "points text not null, "
                     + "programId integer, "
                     + "FOREIGN KEY(programId) REFERENCES program(_id) "
                     + "ON DELETE CASCADE);");

@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import bg.softuni.softuniada.studyrise.Achievement;
@@ -35,15 +37,17 @@ public class AchievementAdapter extends BaseExpandableListAdapter {
     private Context context;
     private int layoutId;
     private List<Achievement> data;
-    private String number;
-    private String finalNumber;
     private ExpandableListView listView;
+    private String number = "1";
+    private String finalNumber;
+    private String programId;
 
-    public AchievementAdapter(Context context, int resource, List<Achievement> objects, ExpandableListView listView) {
+    public AchievementAdapter(Context context, int resource, List<Achievement> objects, ExpandableListView listView, String programId) {
         this.context = context;
         layoutId = resource;
         data = objects;
         this.listView = listView;
+        this.programId = programId;
     }
 
 
@@ -73,7 +77,7 @@ public class AchievementAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return data.get(groupPosition).getPoints();
+        return data.get(groupPosition);
     }
 
     @Override
@@ -140,6 +144,8 @@ public class AchievementAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.chield_list_item, null);
         }
 
+        final Achievement achievement = (Achievement) getChild(gp, chp);
+
         final Button runPoints = (Button) convertView.findViewById(R.id.runPoints);
         final EditText num = (EditText) convertView.findViewById(R.id.quantity);
 
@@ -155,7 +161,8 @@ public class AchievementAdapter extends BaseExpandableListAdapter {
 
         finalTextView = (TextView) convertView.findViewById(R.id.finalPoints);
 
-        number = "1";
+        final String points = 1 + "";
+        number = points;
 
         num.addTextChangedListener(new TextWatcher() {
             @Override
@@ -172,25 +179,36 @@ public class AchievementAdapter extends BaseExpandableListAdapter {
             public void afterTextChanged(Editable s) {
                 if (!s.toString().isEmpty()) {
                     number = s.toString();
-                    finalTextView.setText(" = " + ((Integer.parseInt(number.toString())) * (Integer.parseInt(getChild(gp, chp).toString()))) + "");
+                    finalTextView.setText(" = " + ((Integer.parseInt(number.toString())) * (Integer.parseInt(achievement.getPoints().toString()))) + "");
                 }
             }
         });
 
-        if (number == null || number.isEmpty()) {
-            finalTextView.setText(" = " + ((Integer.parseInt(getChild(gp, chp).toString()))) + "");
+        if (num.getText().toString() == null || num.getText().toString().isEmpty()) {
+            number = points;
+            finalTextView.setText(" = " + ((Integer.parseInt(achievement.getPoints().toString()))) + "");
         } else {
-            finalTextView.setText(" = " + ((Integer.parseInt(number.toString())) * (Integer.parseInt(getChild(gp, chp).toString()))) + "");
+            number = num.getText().toString();
+            finalTextView.setText(" = " + ((Integer.parseInt(number.toString())) * (Integer.parseInt(achievement.getPoints().toString()))) + "");
         }
 
         runPoints.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (number == null)
-                    number = "1";
+                if (num.getText().toString() != null && !num.getText().toString().isEmpty())
+                    number = num.getText().toString();
+                else
+                    number = points;
                 Snackbar.make(view, "ИЗПЪЛНЕНО.", Snackbar.LENGTH_LONG).show();
-                finalNumber = (Integer.parseInt(number.toString())) * (Integer.parseInt(getChild(gp, chp).toString())) + "";
+                finalNumber = (Integer.parseInt(number.toString())) * (Integer.parseInt(achievement.getPoints().toString())) + "";
                 profile.setPersonalPoints(finalNumber, context, "achievement");
+
+                DBPref pref = new DBPref(context);
+                String datePattern = "HH:mm:ss EEE dd MMM yyyy";
+                SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+                String date = dateFormat.format(new Date(System.currentTimeMillis()));
+                pref.addRecord(Long.parseLong(programId), "history", "Achievement", achievement.getTitle(), date, finalNumber);
+                pref.close();
 
             }
         });

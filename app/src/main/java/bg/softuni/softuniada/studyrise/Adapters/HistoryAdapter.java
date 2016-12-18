@@ -15,18 +15,17 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import bg.softuni.softuniada.studyrise.Finance;
+import bg.softuni.softuniada.studyrise.History;
 import bg.softuni.softuniada.studyrise.R;
-import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 
-public class ProfitExpenseAdapter extends RecyclerView.Adapter<ProfitExpenseAdapter.ViewHolder> {
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    private List<Finance> listFinances;
+    private List<History> list;
     private Context context;
     private RecyclerView recyclerView;
 
-    public ProfitExpenseAdapter(Context context, List<Finance> listFinances, RecyclerView recyclerView) {
-        this.listFinances = listFinances;
+    public HistoryAdapter(Context context, List<History> list, RecyclerView recyclerView) {
+        this.list = list;
         this.context = context;
         this.recyclerView = recyclerView;
     }
@@ -39,19 +38,20 @@ public class ProfitExpenseAdapter extends RecyclerView.Adapter<ProfitExpenseAdap
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        View financeView = inflater.inflate(R.layout.profit_expense_item, parent, false);
+        View view = inflater.inflate(R.layout.history_item, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(financeView);
+        ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Finance finance = listFinances.get(position);
 
-        holder.nameTextView.setText(finance.getName());
-        holder.valueTextView.setText(finance.getValue() + "");
-        holder.dateTextView.setText(finance.getDate());
+        final History history = list.get(position);
+
+        holder.historyName.setText(history.getName());
+        holder.historyDate.setText(history.getDate());
+        holder.historyPoints.setText(history.getPoints());
 
         holder.menu.setTag(new Integer(position));
         holder.menu.setOnClickListener(new View.OnClickListener() {
@@ -64,22 +64,22 @@ public class ProfitExpenseAdapter extends RecyclerView.Adapter<ProfitExpenseAdap
 
     @Override
     public int getItemCount() {
-        return listFinances.size();
+        return list.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView nameTextView;
-        public TextView valueTextView;
-        public TextView dateTextView;
+        public TextView historyName;
+        public TextView historyDate;
+        public TextView historyPoints;
         public ImageView menu;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            nameTextView = (TextView) itemView.findViewById(R.id.name_finance);
-            valueTextView = (TextView) itemView.findViewById(R.id.value_finance);
-            dateTextView = (TextView) itemView.findViewById(R.id.date);
-            menu = (ImageView) itemView.findViewById(R.id.finance_menu);
+            historyName = (TextView) itemView.findViewById(R.id.history_name);
+            historyDate = (TextView) itemView.findViewById(R.id.history_date);
+            historyPoints = (TextView) itemView.findViewById(R.id.history_points);
+            menu = (ImageView) itemView.findViewById(R.id.history_menu);
         }
     }
 
@@ -87,7 +87,7 @@ public class ProfitExpenseAdapter extends RecyclerView.Adapter<ProfitExpenseAdap
         PopupMenu popup = new PopupMenu(context, view, Gravity.CENTER);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_edit_delete, popup.getMenu());
-        popup.setOnMenuItemClickListener(new ProfitExpenseAdapter.MyMenuItemClickListener(position));
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(position));
         popup.show();
     }
 
@@ -105,13 +105,13 @@ public class ProfitExpenseAdapter extends RecyclerView.Adapter<ProfitExpenseAdap
                     Toast.makeText(context, "Промени", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.delete:
-                    Finance finance = listFinances.get(position);
-                    DBPref pref = new DBPref(context);
-                    pref.deleteRecord("profit_expense", "type", "name", finance.getType(), finance.getName());
-                    pref.close();
-                    listFinances.remove(position);
-                    notifyDataSetChanged();
-                    recyclerView.invalidate();
+//                    History history = list.get(position);
+//                    DBPref pref = new DBPref(context);
+//                    pref.deleteRecord("profit_expense", "type", "name", history.getType(), finance.getName());
+//                    pref.close();
+//                    list.remove(position);
+//                    notifyDataSetChanged();
+//                    recyclerView.invalidate();
                     return true;
                 default:
             }

@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import bg.softuni.softuniada.studyrise.Activ;
@@ -38,13 +40,14 @@ public class ActivAdapter extends BaseExpandableListAdapter {
     private ExpandableListView listView;
     private String number;
     private String finalNumber;
+    private String programId;
 
-
-    public ActivAdapter(Context context, int resource, List<Activ> objects, ExpandableListView listView) {
+    public ActivAdapter(Context context, int resource, List<Activ> objects, ExpandableListView listView, String programId) {
         this.context = context;
         layoutId = resource;
         data = objects;
         this.listView = listView;
+        this.programId = programId;
     }
 
     private void showPopupMenu(View view, int position) {
@@ -72,7 +75,7 @@ public class ActivAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return data.get(groupPosition).getPoints();
+        return data.get(groupPosition);
     }
 
     @Override
@@ -135,6 +138,8 @@ public class ActivAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.chield_list_item, null);
         }
 
+        final Activ activ = (Activ) getChild(gp, chp);
+
         Button runPoints = (Button) convertView.findViewById(R.id.runPoints);
 
         final EditText num;
@@ -151,6 +156,9 @@ public class ActivAdapter extends BaseExpandableListAdapter {
 
         finalTextView = (TextView) convertView.findViewById(R.id.finalPoints);
 
+        final String points = 1 + "";
+        number = points;
+
         num.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -164,25 +172,38 @@ public class ActivAdapter extends BaseExpandableListAdapter {
             public void afterTextChanged(Editable s) {
                 if (!s.toString().isEmpty()) {
                     number = s.toString();
-                    finalTextView.setText(" = " + ((Integer.parseInt(number.toString())) * (Integer.parseInt(getChild(gp, chp).toString()))) + "");
+                    finalTextView.setText(" = " + ((Integer.parseInt(number.toString())) * (Integer.parseInt(activ.getPoints().toString()))) + "");
                 }
             }
         });
 
-        if (number == null || number.isEmpty()) {
-            finalTextView.setText(" = " + ((Integer.parseInt(getChild(gp, chp).toString()))) + "");
+
+        if (num.getText().toString() == null || num.getText().toString().isEmpty()) {
+            number = points;
+            finalTextView.setText(" = " + ((Integer.parseInt(activ.getPoints().toString()))) + "");
         } else {
-            finalTextView.setText(" = " + ((Integer.parseInt(number.toString())) * (Integer.parseInt(getChild(gp, chp).toString()))) + "");
+            number = num.getText().toString();
+            finalTextView.setText(" = " + ((Integer.parseInt(number.toString())) * (Integer.parseInt(activ.getPoints().toString()))) + "");
         }
 
         runPoints.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (number == null)
-                    number = "1";
+                if (num.getText().toString() != null && !num.getText().toString().isEmpty())
+                    number = num.getText().toString();
+                else
+                    number = points;
                 Snackbar.make(view, "ИЗПЪЛНЕНО.", Snackbar.LENGTH_LONG).show();
-                finalNumber = (Integer.parseInt(number.toString())) * (Integer.parseInt(getChild(gp, chp).toString())) + "";
+                finalNumber = (Integer.parseInt(number.toString())) * (Integer.parseInt(activ.getPoints().toString())) + "";
                 profile.setPersonalPoints(finalNumber, context, "activ");
+
+
+                DBPref pref = new DBPref(context);
+                String datePattern = "HH:mm:ss EEE dd MMM yyyy";
+                SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+                String date = dateFormat.format(new Date(System.currentTimeMillis()));
+                pref.addRecord(Long.parseLong(programId), "history", "Activ", activ.getTitle(), date, finalNumber);
+                pref.close();
             }
         });
 

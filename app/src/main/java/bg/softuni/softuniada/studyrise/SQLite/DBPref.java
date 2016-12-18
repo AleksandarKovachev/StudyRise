@@ -10,32 +10,39 @@ public class DBPref extends DBHelper {
         super(context);
     }
 
-    public void addRecord(String database, String value1, String value2, String value3, Long id) {
+    public void addRecord(Long id, String... value) {
         ContentValues contentValues = new ContentValues();
 
-        if (database.equals("program")) {
+        if (value[0].equals("program")) {
             contentValues.put("_id", id);
-            contentValues.put("programName", value1);
-            contentValues.put("date", value2);
-            contentValues.put("program_type", value3);
-        } else if (database.equals("activ")) {
-            contentValues.put("activTitle", value1);
-            contentValues.put("points", value2);
+            contentValues.put("programName", value[1]);
+            contentValues.put("date", value[2]);
+            contentValues.put("program_type", value[3]);
+        } else if (value[0].equals("activ")) {
+            contentValues.put("activTitle", value[1]);
+            contentValues.put("points", value[2]);
             contentValues.put("programId", id);
-        } else if (database.equals("achievement")) {
-            contentValues.put("achievement", value1);
-            contentValues.put("points", value2);
+        } else if (value[0].equals("achievement")) {
+            contentValues.put("achievement", value[1]);
+            contentValues.put("points", value[2]);
             contentValues.put("programId", id);
-        } else if (database.equals("profit_expense")) {
-            contentValues.put("type", value1);
-            contentValues.put("name", value2);
-            contentValues.put("value", Double.parseDouble(value3));
+        } else if (value[0].equals("profit_expense")) {
+            contentValues.put("type", value[1]);
+            contentValues.put("name", value[2]);
+            contentValues.put("value", Double.parseDouble(value[3]));
             contentValues.put("programId", id);
-        } else if (database.equals("finance")) {
-            contentValues.put("type", value1);
-            contentValues.put("name", value2);
+            contentValues.put("date", value[4]);
+        } else if (value[0].equals("finance")) {
+            contentValues.put("type", value[1]);
+            contentValues.put("name", value[2]);
+        } else if (value[0].equals("history")) {
+            contentValues.put("type", value[1]);
+            contentValues.put("name", value[2]);
+            contentValues.put("date", value[3]);
+            contentValues.put("points", value[4]);
+            contentValues.put("programId", id);
         }
-        this.db.insert(database, null, contentValues);
+        this.db.insert(value[0], null, contentValues);
     }
 
     public Cursor getVals(String database, String id) {
@@ -48,7 +55,9 @@ public class DBPref extends DBHelper {
         else if (database.equals("finance"))
             return this.db.query(database, new String[]{"name"}, "type=?", new String[]{id}, null, null, null);
         else if (database.equals("profit_expense"))
-            return this.db.query(database, new String[]{"type", "name", "value"}, "type=?", new String[]{id}, null, null, null);
+            return this.db.query(database, new String[]{"type", "name", "value", "date"}, "type=?", new String[]{id}, null, null, "_id DESC");
+        else if (database.equals("history"))
+            return this.db.query(database, new String[]{"type", "name", "date", "points"}, "programId=?", new String[]{id}, null, null, "_id DESC");
         else
             return null;
     }

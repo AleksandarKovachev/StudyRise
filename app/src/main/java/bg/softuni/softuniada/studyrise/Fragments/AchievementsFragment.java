@@ -56,7 +56,7 @@ public class AchievementsFragment extends Fragment implements View.OnClickListen
         pref.close();
 
         listView = (ExpandableListView) root.findViewById(R.id.list_achievement);
-        adapter = new AchievementAdapter(getContext(), R.layout.activ_list_item, data, listView);
+        adapter = new AchievementAdapter(getContext(), R.layout.activ_list_item, data, listView, programId + "");
         listView.setAdapter(adapter);
 
         inputActiv = (Button) root.findViewById(R.id.addNewAchievement);
@@ -97,7 +97,7 @@ public class AchievementsFragment extends Fragment implements View.OnClickListen
                                 data.add(achievement);
 
                                 DBPref pref = new DBPref(getContext());
-                                pref.addRecord("achievement", achievement.getTitle(), achievement.getPoints(), "", programId);
+                                pref.addRecord(programId, "achievement", achievement.getTitle(), achievement.getPoints());
                                 pref.close();
 
                                 adapter.notifyDataSetChanged();

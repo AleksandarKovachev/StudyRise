@@ -150,7 +150,7 @@ public class Programs extends Fragment implements View.OnClickListener {
                                 program.setProgram_type(programType);
 
                                 DBPref pref = new DBPref(getContext());
-                                pref.addRecord("program", program.getName(), program.getDate(), program.getProgram_type(), (long) data.size());
+                                pref.addRecord((long) data.size(), "program", program.getName(), program.getDate(), program.getProgram_type());
                                 pref.close();
 
                                 data.add(program);

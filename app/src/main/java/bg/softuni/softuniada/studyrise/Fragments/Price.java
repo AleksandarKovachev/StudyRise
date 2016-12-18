@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import bg.softuni.softuniada.studyrise.Adapters.FinanceAdapter;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
@@ -37,7 +40,10 @@ public class Price extends Fragment {
             public void onClick(View v) {
                 value = editText.getText().toString();
                 DBPref pref = new DBPref(getContext());
-                pref.addRecord("profit_expense", FinanceAdapter.getType(), FinanceAdapter.getCategory(), value, Long.parseLong(programId));
+                String datePattern = "HH:mm:ss EEE dd MMM yyyy";
+                SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+                String date = dateFormat.format(new Date(System.currentTimeMillis()));
+                pref.addRecord(Long.parseLong(programId), "profit_expense", FinanceAdapter.getType(), FinanceAdapter.getCategory(), value, date);
                 pref.close();
 
                 if (FinanceAdapter.getType().equals("Приход")) {

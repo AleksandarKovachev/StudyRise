@@ -13,4 +13,11 @@
         <item>Продуктивност</item>
         <item>Финанси</item>
     </string-array>
+
+    <string-array name="finance">
+        <item>Дневен</item>
+        <item>Седмичен</item>
+        <item>Месечен</item>
+        <item>Годишен</item>
+    </string-array>
 </resources>

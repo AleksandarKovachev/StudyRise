@@ -125,7 +125,7 @@ public class FinanceAdapter extends RecyclerView.Adapter<FinanceAdapter.ViewHold
                     @Override
                     public void onClick(View v) {
                         DBPref pref = new DBPref(getContext());
-                        pref.addRecord("finance", getType(), finance.getName(), null, null);
+                        pref.addRecord(null, "finance", getType(), finance.getName());
                         pref.close();
                         listFinances.add(finance);
                         notifyDataSetChanged();

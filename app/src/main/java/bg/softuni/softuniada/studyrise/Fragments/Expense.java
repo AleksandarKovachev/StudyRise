@@ -43,6 +43,7 @@ public class Expense extends Fragment {
                 finance.setType(c.getString(c.getColumnIndex("type")));
                 finance.setName(c.getString(c.getColumnIndex("name")));
                 finance.setValue(c.getDouble(c.getColumnIndex("value")));
+                finance.setDate(c.getString(c.getColumnIndex("date")));
                 listFinances.add(finance);
             } while (c.moveToNext());
         }

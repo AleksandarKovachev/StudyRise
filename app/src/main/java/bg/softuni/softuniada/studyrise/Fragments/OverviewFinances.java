@@ -1,33 +1,273 @@
 package bg.softuni.softuniada.studyrise.Fragments;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.WindowManager;
+import android.widget.Spinner;
+
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import bg.softuni.softuniada.studyrise.Activities.ScreenSlidePagerActivity;
+import bg.softuni.softuniada.studyrise.Adapters.SpinnerAdapterFinance;
+import bg.softuni.softuniada.studyrise.Finance;
+import bg.softuni.softuniada.studyrise.FragmentLifecycle;
 import bg.softuni.softuniada.studyrise.R;
+import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 
-public class OverviewFinances extends Fragment {
+public class OverviewFinances extends Fragment implements FragmentLifecycle, ActionBar.OnNavigationListener {
+
+    protected BarChart mChart;
+    private boolean inOverview = false;
+
+    private Cursor c;
+    private DBPref pref;
+    private List<Finance> listFinances;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View root = inflater.inflate(R.layout.finance_overview_fragment, container, false);
 
-        Button button = (Button) root.findViewById(R.id.financesButton);
+        inOverview = true;
 
-        button.setOnClickListener(new View.OnClickListener() {
+        Spinner spinner = (Spinner) root.findViewById(R.id.spinner_finance);
+
+        spinner.setAdapter(new SpinnerAdapterFinance(getContext(), R.layout.finance_row_spinner, getResources().getStringArray(R.array.finance)));
+
+        mChart = (BarChart) root.findViewById(R.id.bar_chart);
+        mChart.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        mChart.setExtraTopOffset(-30f);
+        mChart.setExtraBottomOffset(10f);
+        mChart.setExtraLeftOffset(70f);
+        mChart.setExtraRightOffset(70f);
+
+        mChart.setDrawBarShadow(false);
+        mChart.setDrawValueAboveBar(true);
+
+        mChart.getDescription().setEnabled(false);
+
+        // scaling can now only be done on x- and y-axis separately
+        mChart.setPinchZoom(false);
+
+        mChart.setDrawGridBackground(false);
+
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setTextColor(Color.LTGRAY);
+        xAxis.setTextSize(13f);
+        xAxis.setLabelCount(7);
+        xAxis.setCenterAxisLabels(true);
+        xAxis.setGranularity(1f);
+
+        YAxis left = mChart.getAxisLeft();
+        left.setDrawLabels(false);
+        left.setSpaceTop(10f);
+        left.setSpaceBottom(10f);
+        left.setDrawAxisLine(false);
+        left.setDrawGridLines(false);
+        left.setDrawZeroLine(true); // draw a zero line
+        left.setZeroLineColor(Color.GRAY);
+        left.setZeroLineWidth(0.7f);
+        mChart.getAxisRight().setEnabled(false);
+        mChart.getLegend().setEnabled(false);
+
+        listFinances = new ArrayList<>();
+
+        pref = new DBPref(getContext());
+        c = pref.getVals("profit_expense", "Приход");
+        getVals();
+
+        pref = new DBPref(getContext());
+        c = pref.getVals("profit_expense", "Разход");
+        getVals();
+
+        // THIS IS THE ORIGINAL DATA YOU WANT TO PLOT
+        final List<Data> data = new ArrayList<>();
+
+        float count = 0f;
+
+        for (Finance finance : listFinances) {
+            String date = finance.getDate().substring(13, finance.getDate().length());
+            String datePattern = "dd MMM yyyy";
+            SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+            String currentDate = dateFormat.format(new Date(System.currentTimeMillis()));
+            if (date.equals(currentDate)) {
+                if (finance.getType().equals("Разход"))
+                    data.add(new Data(count, (float) (finance.getValue() * -1), finance.getDate().substring(0, 9)));
+                else if (finance.getType().equals("Приход"))
+                    data.add(new Data(count, (float) finance.getValue(), finance.getDate().substring(0, 9)));
+                count++;
+            }
+        }
+
+//        data.add(new Data(0f, -224.1f, "12-29"));
+//        data.add(new Data(1f, 238.5f, "12-30"));
+//        data.add(new Data(2f, 1280.1f, "12-31"));
+//        data.add(new Data(3f, -442.3f, "01-01"));
+//        data.add(new Data(4f, -2280.1f, "01-02"));
+//        data.add(new Data(5f, 280.1f, "02-02"));
+//        data.add(new Data(6f, -1280.1f, "03-02"));
+
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ScreenSlidePagerActivity.class);
-                startActivity(intent);
+            public String getFormattedValue(float value, AxisBase axis) {
+                return data.get(Math.min(Math.max((int) value, 0), data.size() - 1)).xAxisValue;
             }
         });
 
+        mChart.animateXY(3000, 3000);
+
+        setData(data);
+
         return root;
+    }
+
+    private void setData(List<Data> dataList) {
+
+        ArrayList<BarEntry> values = new ArrayList<BarEntry>();
+        List<Integer> colors = new ArrayList<Integer>();
+
+        int green = Color.GREEN;
+        int red = Color.BLUE;
+
+        for (int i = 0; i < dataList.size(); i++) {
+
+            Data d = dataList.get(i);
+            BarEntry entry = new BarEntry(d.xValue, d.yValue);
+            values.add(entry);
+
+            // specific colors
+            if (d.yValue >= 0)
+                colors.add(green);
+            else
+                colors.add(red);
+        }
+
+        BarDataSet set;
+
+        if (mChart.getData() != null &&
+                mChart.getData().getDataSetCount() > 0) {
+            set = (BarDataSet) mChart.getData().getDataSetByIndex(0);
+            set.setValues(values);
+            mChart.getData().notifyDataChanged();
+            mChart.notifyDataSetChanged();
+        } else {
+            set = new BarDataSet(values, "Values");
+            set.setColors(colors);
+            set.setValueTextColors(colors);
+
+            BarData data = new BarData(set);
+            data.setValueTextSize(13f);
+            data.setValueFormatter(new ValueFormatter());
+            data.setBarWidth(0.8f);
+
+            mChart.setData(data);
+            mChart.invalidate();
+        }
+    }
+
+    public void getVals() {
+
+        if (c.moveToFirst()) {
+            do {
+                Finance finance = new Finance();
+                finance.setType(c.getString(c.getColumnIndex("type")));
+                finance.setName(c.getString(c.getColumnIndex("name")));
+                finance.setValue(c.getDouble(c.getColumnIndex("value")));
+                finance.setDate(c.getString(c.getColumnIndex("date")));
+                listFinances.add(finance);
+            } while (c.moveToNext());
+        }
+
+        c.close();
+        pref.close();
+    }
+
+    private class Data {
+
+        public String xAxisValue;
+        public float yValue;
+        public float xValue;
+
+        public Data(float xValue, float yValue, String xAxisValue) {
+            this.xAxisValue = xAxisValue;
+            this.yValue = yValue;
+            this.xValue = xValue;
+        }
+    }
+
+    private class ValueFormatter implements IValueFormatter {
+
+        private DecimalFormat mFormat;
+
+        public ValueFormatter() {
+            mFormat = new DecimalFormat("######.0");
+        }
+
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            return mFormat.format(value);
+        }
+    }
+
+    @Override
+    public void onResumeFragment() {
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        if (inOverview)
+            inflater.inflate(R.menu.menu_finances, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.finance_add_menu) {
+            Intent intent = new Intent(getContext(), ScreenSlidePagerActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+        return false;
+    }
+
+    public OverviewFinances() {
+        setHasOptionsMenu(true);
     }
 }
