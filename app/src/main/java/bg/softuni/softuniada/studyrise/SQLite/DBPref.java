@@ -54,6 +54,8 @@ public class DBPref extends DBHelper {
             return this.db.query(database, new String[]{"achievement", "points"}, "programId=?", new String[]{id}, null, null, null);
         else if (database.equals("finance"))
             return this.db.query(database, new String[]{"name"}, "type=?", new String[]{id}, null, null, null);
+        else if (database.equals("profit_expense") && id.isEmpty())
+            return this.db.query(database, new String[]{"type", "name", "value", "date"}, null, null, null, null, null);
         else if (database.equals("profit_expense"))
             return this.db.query(database, new String[]{"type", "name", "value", "date"}, "type=?", new String[]{id}, null, null, "_id DESC");
         else if (database.equals("history"))

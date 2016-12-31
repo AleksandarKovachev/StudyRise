@@ -39,5 +39,6 @@
 
     <string name="title_template_step">Step <xliff:g id="step_number">%1$d</xliff:g>: Lorem
         Ipsum</string>
+    <string name="bar_data">Няма данни за посочения период</string>
 
 </resources>

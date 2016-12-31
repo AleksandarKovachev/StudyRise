@@ -1,6 +1,9 @@
 package bg.softuni.softuniada.studyrise;
 
-public class Finance {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class Finance implements Serializable {
 
     private String type;
     private String name;

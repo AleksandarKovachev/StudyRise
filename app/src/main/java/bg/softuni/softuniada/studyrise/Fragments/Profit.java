@@ -21,7 +21,7 @@ public class Profit extends Fragment {
 
     public static RecyclerView recyclerView;
 
-    private ArrayList<Finance> listFinances;
+    public static ArrayList<Finance> listFinances;
 
     public static ProfitExpenseAdapter profitAdapter;
 

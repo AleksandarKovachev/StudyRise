@@ -1,5 +1,6 @@
 package bg.softuni.softuniada.studyrise.Fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -103,12 +105,9 @@ public class OverviewFinances extends Fragment implements FragmentLifecycle, Act
         listFinances = new ArrayList<>();
 
         pref = new DBPref(getContext());
-        c = pref.getVals("profit_expense", "Приход");
+        c = pref.getVals("profit_expense", "");
         getVals();
 
-        pref = new DBPref(getContext());
-        c = pref.getVals("profit_expense", "Разход");
-        getVals();
 
         // THIS IS THE ORIGINAL DATA YOU WANT TO PLOT
         final List<Data> data = new ArrayList<>();
@@ -128,28 +127,26 @@ public class OverviewFinances extends Fragment implements FragmentLifecycle, Act
                 count++;
             }
         }
+        TextView textView = (TextView) root.findViewById(R.id.null_data_chart);
+        if (data.size() == 0) {
+            textView.setVisibility(View.VISIBLE);
+        } else {
+            textView.setVisibility(View.INVISIBLE);
 
-//        data.add(new Data(0f, -224.1f, "12-29"));
-//        data.add(new Data(1f, 238.5f, "12-30"));
-//        data.add(new Data(2f, 1280.1f, "12-31"));
-//        data.add(new Data(3f, -442.3f, "01-01"));
-//        data.add(new Data(4f, -2280.1f, "01-02"));
-//        data.add(new Data(5f, 280.1f, "02-02"));
-//        data.add(new Data(6f, -1280.1f, "03-02"));
+            xAxis.setValueFormatter(new IAxisValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, AxisBase axis) {
+                    return data.get(Math.min(Math.max((int) value, 0), data.size() - 1)).xAxisValue;
+                }
+            });
 
-        xAxis.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return data.get(Math.min(Math.max((int) value, 0), data.size() - 1)).xAxisValue;
-            }
-        });
+            mChart.animateXY(3000, 3000);
 
-        mChart.animateXY(3000, 3000);
-
-        setData(data);
-
+            setData(data);
+        }
         return root;
     }
+
 
     private void setData(List<Data> dataList) {
 
@@ -237,10 +234,16 @@ public class OverviewFinances extends Fragment implements FragmentLifecycle, Act
         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
             return mFormat.format(value);
         }
+
     }
 
     @Override
     public void onResumeFragment() {
+        mChart.animateXY(3000, 3000);
+        Profit.profitAdapter.notifyDataSetChanged();
+        Profit.recyclerView.invalidate();
+        Expense.profitAdapter.notifyDataSetChanged();
+        Expense.recyclerView.invalidate();
     }
 
     @Override
@@ -256,7 +259,7 @@ public class OverviewFinances extends Fragment implements FragmentLifecycle, Act
 
         if (id == R.id.finance_add_menu) {
             Intent intent = new Intent(getContext(), ScreenSlidePagerActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 0);
         }
 
         return super.onOptionsItemSelected(item);
@@ -269,5 +272,29 @@ public class OverviewFinances extends Fragment implements FragmentLifecycle, Act
 
     public OverviewFinances() {
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+
+            pref = new DBPref(getContext());
+            c = pref.getVals("profit_expense", "");
+            getVals();
+
+            Finance finance = (Finance) data.getSerializableExtra("finance");
+
+            if (finance.getType().equals("Приход")) {
+                Profit.listFinances.add(0, finance);
+                Profit.profitAdapter.notifyDataSetChanged();
+                Profit.recyclerView.invalidate();
+            } else {
+                Expense.listFinances.add(0, finance);
+                Expense.profitAdapter.notifyDataSetChanged();
+                Profit.recyclerView.invalidate();
+            }
+        }
     }
 }

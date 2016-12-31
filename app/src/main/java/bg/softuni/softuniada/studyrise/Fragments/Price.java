@@ -1,5 +1,7 @@
 package bg.softuni.softuniada.studyrise.Fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import bg.softuni.softuniada.studyrise.Adapters.FinanceAdapter;
+import bg.softuni.softuniada.studyrise.Finance;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 
@@ -46,14 +49,13 @@ public class Price extends Fragment {
                 pref.addRecord(Long.parseLong(programId), "profit_expense", FinanceAdapter.getType(), FinanceAdapter.getCategory(), value, date);
                 pref.close();
 
-                if (FinanceAdapter.getType().equals("Приход")) {
-                    Profit.profitAdapter.notifyDataSetChanged();
-                    Profit.recyclerView.invalidate();
-                } else {
-                    Expense.profitAdapter.notifyDataSetChanged();
-                    Expense.recyclerView.invalidate();
-                }
+                Finance finance = new Finance();
+                finance.setType(FinanceAdapter.getType());
+                finance.setDate(date);
+                finance.setValue(Double.parseDouble(value));
+                finance.setName(FinanceAdapter.getCategory());
 
+                getActivity().setResult(Activity.RESULT_OK, new Intent().putExtra("finance", finance));
                 getActivity().finish();
                 getActivity().overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
             }

@@ -23,7 +23,7 @@ public class Expense extends Fragment {
 
     public static ProfitExpenseAdapter profitAdapter;
 
-    private ArrayList<Finance> listFinances;
+    public static ArrayList<Finance> listFinances;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
