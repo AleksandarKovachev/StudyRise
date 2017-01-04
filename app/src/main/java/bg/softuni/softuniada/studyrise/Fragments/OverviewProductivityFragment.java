@@ -29,6 +29,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
@@ -168,7 +169,7 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
         if (dailyPoints < 100)
             setData(100, dailyPoints);
         else
-            setData(100, 100);
+            setData(0, dailyPoints);
 
         mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
 
@@ -274,8 +275,12 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
 
         ArrayList<PieEntry> entries = new ArrayList<>();
 
-        entries.add(new PieEntry(points, "днес"));
-        entries.add(new PieEntry(range - points, "остават"));
+        if (range == 0) {
+            entries.add(new PieEntry(100, "днес\n" + points));
+        } else {
+            entries.add(new PieEntry(points, "днес"));
+            entries.add(new PieEntry(range - points, "остават"));
+        }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
         dataSet.setSelectionShift(4f);
@@ -285,14 +290,17 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
         ArrayList<Integer> colors = new ArrayList<>();
 
         colors.add(getResources().getColor(R.color.colorAccent));
-//        colors.add(getResources().getColor(R.color.colorPrimary));
         colors.add(Color.RED);
 
         dataSet.setColors(colors);
         dataSet.setSelectionShift(0f);
 
         PieData data = new PieData(dataSet);
-        data.setValueFormatter(new LargeValueFormatter());
+        if (range == 0)
+            data.setValueFormatter(new PercentFormatter());
+        else
+            data.setValueFormatter(new LargeValueFormatter());
+
         data.setValueTextSize(12f);
         data.setValueTextColor(Color.WHITE);
         mChart.setData(data);
