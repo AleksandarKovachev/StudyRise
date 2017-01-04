@@ -33,7 +33,7 @@
             android:ems="10"
             android:focusable="true"
             android:gravity="center"
-            android:inputType="number"
+            android:inputType="numberDecimal|numberSigned"
             android:text="1" />
 
         <TextView

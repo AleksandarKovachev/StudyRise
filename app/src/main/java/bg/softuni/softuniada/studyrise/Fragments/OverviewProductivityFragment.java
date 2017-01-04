@@ -2,20 +2,41 @@ package bg.softuni.softuniada.studyrise.Fragments;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.LargeValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import bg.softuni.softuniada.studyrise.Activities.MainActivity;
@@ -27,7 +48,7 @@ import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
-public class OverviewProductivityFragment extends Fragment implements FragmentLifecycle {
+public class OverviewProductivityFragment extends Fragment implements FragmentLifecycle, OnChartValueSelectedListener {
 
     public static Profile profile;
     private String programId;
@@ -37,7 +58,11 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
     private HistoryAdapter adapter;
     private List<History> list;
 
+    private int dailyPoints = 0;
+
     private TextView profilePoints;
+
+    private PieChart mChart;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,7 +107,6 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
             profilePoints.setTextSize(25);
         }
 
-        recyclerView = (RecyclerView) root.findViewById(R.id.history_recycler_view);
         list = new ArrayList<>();
 
         DBPref pref = new DBPref(getContext());
@@ -101,6 +125,59 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
         c.close();
         pref.close();
 
+        mChart = (PieChart) root.findViewById(R.id.pie_chart);
+        mChart.setUsePercentValues(true);
+        mChart.getDescription().setEnabled(false);
+        mChart.setExtraOffsets(5, 10, 5, 5);
+
+        mChart.setDragDecelerationFrictionCoef(0.95f);
+
+        mChart.setCenterText(generateCenterSpannableText());
+
+        mChart.setDrawHoleEnabled(true);
+        mChart.setHoleColor(getResources().getColor(R.color.colorPrimary));
+
+        mChart.setTransparentCircleColor(Color.WHITE);
+        mChart.setTransparentCircleAlpha(110);
+
+        mChart.setHoleRadius(58f);
+        mChart.setTransparentCircleRadius(61f);
+
+        mChart.setDrawCenterText(true);
+
+        mChart.setRotationAngle(0);
+        // enable rotation of the chart by touch
+        mChart.setRotationEnabled(true);
+        mChart.setHighlightPerTapEnabled(true);
+
+        // add a selection listener
+        mChart.setOnChartValueSelectedListener(this);
+
+        dailyPoints = 0;
+
+        for (History history : list) {
+            String date = history.getDate().substring(13, history.getDate().length());
+            String datePattern = "dd MMM yyyy";
+            SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+            String currentDate = dateFormat.format(new Date(System.currentTimeMillis()));
+            if (date.equals(currentDate)) {
+                dailyPoints += Float.parseFloat(history.getPoints());
+            }
+        }
+
+        if (dailyPoints < 100)
+            setData(100, dailyPoints);
+        else
+            setData(100, 100);
+
+        mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+
+        // entry label styling
+        mChart.setEntryLabelColor(Color.WHITE);
+        mChart.setEntryLabelTextSize(12f);
+
+        recyclerView = (RecyclerView) root.findViewById(R.id.history_recycler_view);
+
         adapter = new HistoryAdapter(getContext(), list, recyclerView);
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);
@@ -108,6 +185,48 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new SlideInUpAnimator());
+
+        mChart.setOnChartGestureListener(new OnChartGestureListener() {
+            @Override
+            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+            }
+
+            @Override
+            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+            }
+
+            @Override
+            public void onChartLongPressed(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartDoubleTapped(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartSingleTapped(MotionEvent me) {
+                mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+            }
+
+            @Override
+            public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+            }
+
+            @Override
+            public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+            }
+
+            @Override
+            public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+            }
+        });
 
         return root;
     }
@@ -149,6 +268,67 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setData(float range, float points) {
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+
+        entries.add(new PieEntry(points, "днес"));
+        entries.add(new PieEntry(range - points, "остават"));
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setSelectionShift(4f);
+
+        // add a lot of colors
+
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        colors.add(getResources().getColor(R.color.colorAccent));
+//        colors.add(getResources().getColor(R.color.colorPrimary));
+        colors.add(Color.RED);
+
+        dataSet.setColors(colors);
+        dataSet.setSelectionShift(0f);
+
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new LargeValueFormatter());
+        data.setValueTextSize(12f);
+        data.setValueTextColor(Color.WHITE);
+        mChart.setData(data);
+
+        // undo all highlights
+        mChart.highlightValues(null);
+
+        mChart.invalidate();
+    }
+
+    private SpannableString generateCenterSpannableText() {
+
+        SpannableString s = new SpannableString("Общо:\n" + profile.getPersonalPoints());
+        s.setSpan(new RelativeSizeSpan(1.7f), 0, 5, 0);
+        s.setSpan(new StyleSpan(Typeface.NORMAL), 6, s.length(), 0);
+        s.setSpan(new RelativeSizeSpan(5f), 6, s.length(), 0);
+        s.setSpan(new ForegroundColorSpan(Color.WHITE), 6, s.length(), 0);
+        return s;
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+    }
+
+    @Override
+    public void onNothingSelected() {
+    }
+
+    public static boolean isParsable(String input) {
+        boolean parsable = true;
+        try {
+            Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            parsable = false;
+        }
+        return parsable;
     }
 
     public OverviewProductivityFragment() {
