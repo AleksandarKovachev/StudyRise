@@ -1,1 +1,1 @@
-# Android project for Softuniada
+# Android project.
