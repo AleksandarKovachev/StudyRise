@@ -115,7 +115,8 @@ public class OverviewFinances extends Fragment implements FragmentLifecycle, Act
         float count = 0f;
 
         for (Finance finance : listFinances) {
-            String date = finance.getDate().substring(13, finance.getDate().length());
+            String[] dateArray = finance.getDate().split(" ");
+            String date = dateArray[2] + " " + dateArray[3] + " " + dateArray[4];
             String datePattern = "dd MMM yyyy";
             SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
             String currentDate = dateFormat.format(new Date(System.currentTimeMillis()));

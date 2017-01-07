@@ -157,12 +157,15 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
         dailyPoints = 0;
 
         for (History history : list) {
-            String date = history.getDate().substring(13, history.getDate().length());
-            String datePattern = "dd MMM yyyy";
-            SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
-            String currentDate = dateFormat.format(new Date(System.currentTimeMillis()));
-            if (date.equals(currentDate)) {
-                dailyPoints += Float.parseFloat(history.getPoints());
+            if (history.getType().equals("Activ")) {
+                String[] dateArray = history.getDate().split(" ");
+                String date = dateArray[2] + " " + dateArray[3] + " " + dateArray[4];
+                String datePattern = "dd MMM yyyy";
+                SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+                String currentDate = dateFormat.format(new Date(System.currentTimeMillis()));
+                if (date.equals(currentDate)) {
+                    dailyPoints += Float.parseFloat(history.getPoints());
+                }
             }
         }
 
