@@ -1,12 +1,13 @@
 package bg.softuni.softuniada.studyrise.Fragments;
 
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -26,18 +26,16 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import bg.softuni.softuniada.studyrise.Adapters.ProgramsAdapter;
-import bg.softuni.softuniada.studyrise.Profile;
 import bg.softuni.softuniada.studyrise.Program;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class Programs extends Fragment implements View.OnClickListener {
 
-    private Program program;
-    private ListView listView;
+    private RecyclerView recyclerView;
     private ProgramsAdapter adapter;
     private ArrayList<Program> data;
-    public static Profile profile;
     public static TextView textView;
     private Button addProgram;
     private boolean hasAProgram = false;
@@ -73,42 +71,16 @@ public class Programs extends Fragment implements View.OnClickListener {
         c.close();
         pref.close();
 
-        listView = (ListView) root.findViewById(R.id.list_programs);
-        adapter = new ProgramsAdapter(getContext(), R.layout.program_list_item, data, listView);
-        listView.setAdapter(adapter);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                program = (Program) listView.getItemAtPosition(position);
-
-                profile = new Profile();
-
-                profile.setId(program.getId());
-
-                profile.setPersonalPoints("0", getContext(), "");
-                profile.setDailyGoals(0 + "");
-
-                SharedPreferences preferences = getContext().getSharedPreferences("Program", 0);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("program", program.getId() + "");
-                editor.commit();
-
-                Fragment f;
-                if (program.getProgram_type().equals(array[1])) {
-                    f = new ProductivityFragment();
-                } else {
-                    f = new FinancesProgram();
-                }
-
-                if (f != null) {
-                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body, f);
-                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    ft.commit();
-                }
-            }
-        });
+        recyclerView = (RecyclerView) root.findViewById(R.id.list_programs);
+        adapter = new ProgramsAdapter(getContext(), data, recyclerView, fragmentTransaction);
+        recyclerView.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new SlideInUpAnimator());
+        recyclerView.setNestedScrollingEnabled(false);
 
         textView = (TextView) root.findViewById(R.id.textAddProgram);
 
@@ -156,7 +128,7 @@ public class Programs extends Fragment implements View.OnClickListener {
                                 data.add(program);
 
                                 adapter.notifyDataSetChanged();
-                                listView.invalidate();
+                                recyclerView.invalidate();
                             }
                         })
                 .setNegativeButton("Отмени",

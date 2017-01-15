@@ -2,8 +2,10 @@ package bg.softuni.softuniada.studyrise.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 import bg.softuni.softuniada.studyrise.Achievement;
+import bg.softuni.softuniada.studyrise.Activ;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 
@@ -232,7 +235,7 @@ public class AchievementAdapter extends BaseExpandableListAdapter {
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.action_edit:
-                    Toast.makeText(context, "Промени", Toast.LENGTH_SHORT).show();
+                    dialogChangeItem((Achievement) listView.getItemAtPosition(position));
                     return true;
                 case R.id.delete:
                     Achievement achievement = (Achievement) listView.getItemAtPosition(position);
@@ -247,5 +250,45 @@ public class AchievementAdapter extends BaseExpandableListAdapter {
             }
             return false;
         }
+    }
+
+    private void dialogChangeItem(final Achievement item) {
+        LayoutInflater li = LayoutInflater.from(context);
+        View dialogView = li.inflate(R.layout.dialog_change_item, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+        alertDialogBuilder.setView(dialogView);
+
+        final EditText title, points;
+        title = (EditText) dialogView.findViewById(R.id.changeTitle);
+        points = (EditText) dialogView.findViewById(R.id.changePoints);
+
+        title.setText(item.getTitle());
+        points.setText(item.getPoints());
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Промени",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                DBPref pref = new DBPref(context);
+                                pref.changeItem("achievement", "achievement", title.getText().toString(), "points", points.getText().toString(), "achievement", item.getTitle());
+                                pref.close();
+                                data.get(data.indexOf(item)).setTitle(title.getText().toString());
+                                data.get(data.indexOf(item)).setPoints(points.getText().toString());
+                                notifyDataSetChanged();
+                                listView.invalidate();
+                            }
+                        })
+                .setNegativeButton("Отмени",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }

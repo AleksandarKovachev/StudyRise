@@ -2,8 +2,10 @@ package bg.softuni.softuniada.studyrise.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -226,7 +228,7 @@ public class ActivAdapter extends BaseExpandableListAdapter {
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.action_edit:
-                    Toast.makeText(context, "Промени", Toast.LENGTH_SHORT).show();
+                    dialogChangeItem((Activ) listView.getItemAtPosition(position));
                     return true;
                 case R.id.delete:
                     Activ activ = (Activ) listView.getItemAtPosition(position);
@@ -251,5 +253,45 @@ public class ActivAdapter extends BaseExpandableListAdapter {
             parsable = false;
         }
         return parsable;
+    }
+
+    private void dialogChangeItem(final Activ item) {
+        LayoutInflater li = LayoutInflater.from(context);
+        View dialogView = li.inflate(R.layout.dialog_change_item, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+        alertDialogBuilder.setView(dialogView);
+
+        final EditText title, points;
+        title = (EditText) dialogView.findViewById(R.id.changeTitle);
+        points = (EditText) dialogView.findViewById(R.id.changePoints);
+
+        title.setText(item.getTitle());
+        points.setText(item.getPoints());
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Промени",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                DBPref pref = new DBPref(context);
+                                pref.changeItem("activ", "activTitle", title.getText().toString(), "points", points.getText().toString(), "activTitle", item.getTitle());
+                                pref.close();
+                                data.get(data.indexOf(item)).setTitle(title.getText().toString());
+                                data.get(data.indexOf(item)).setPoints(points.getText().toString());
+                                notifyDataSetChanged();
+                                listView.invalidate();
+                            }
+                        })
+                .setNegativeButton("Отмени",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }

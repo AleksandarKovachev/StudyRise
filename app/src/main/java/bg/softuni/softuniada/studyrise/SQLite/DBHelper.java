@@ -29,7 +29,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL("create table activ ("
                 + "_id integer primary key autoincrement, "
-                + "activTitle text not null, " + "points text not null, "
+                + "activTitle text not null, "
+                + "points text not null, "
                 + "programId integer, "
                 + "FOREIGN KEY(programId) REFERENCES program(_id) "
                 + "ON DELETE CASCADE);");

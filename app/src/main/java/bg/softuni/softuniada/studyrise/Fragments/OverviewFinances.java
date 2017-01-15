@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
@@ -64,7 +66,7 @@ public class OverviewFinances extends Fragment implements FragmentLifecycle, Act
         spinner.setAdapter(new SpinnerAdapterFinance(getContext(), R.layout.finance_row_spinner, getResources().getStringArray(R.array.finance)));
 
         mChart = (BarChart) root.findViewById(R.id.bar_chart);
-        mChart.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        mChart.setBackgroundColor(getResources().getColor(R.color.icons));
         mChart.setExtraTopOffset(-30f);
         mChart.setExtraBottomOffset(10f);
         mChart.setExtraLeftOffset(70f);
@@ -154,8 +156,8 @@ public class OverviewFinances extends Fragment implements FragmentLifecycle, Act
         ArrayList<BarEntry> values = new ArrayList<BarEntry>();
         List<Integer> colors = new ArrayList<Integer>();
 
-        int green = Color.GREEN;
-        int red = Color.BLUE;
+        int green = getResources().getColor(R.color.green);
+        int red = Color.RED;
 
         for (int i = 0; i < dataList.size(); i++) {
 
@@ -245,25 +247,6 @@ public class OverviewFinances extends Fragment implements FragmentLifecycle, Act
         Profit.recyclerView.invalidate();
         Expense.profitAdapter.notifyDataSetChanged();
         Expense.recyclerView.invalidate();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        if (inOverview)
-            inflater.inflate(R.menu.menu_finances, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.finance_add_menu) {
-            Intent intent = new Intent(getContext(), ScreenSlidePagerActivity.class);
-            startActivityForResult(intent, 0);
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

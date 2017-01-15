@@ -14,8 +14,6 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -68,7 +66,7 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_overview_program, container, false);
+        View root = inflater.inflate(R.layout.fragment_overview_productivity, container, false);
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("Program", 0);
         programId = sharedPreferences.getString("program", null);
@@ -189,6 +187,7 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new SlideInUpAnimator());
+        recyclerView.clearFocus();
 
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
@@ -243,13 +242,6 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
                 profile.setPersonalPoints("0", getContext(), "init");
             } else
                 profilePoints.setText(profile.getPersonalPoints());
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        if (inOverview)
-            inflater.inflate(R.menu.menu_program, menu);
     }
 
     @Override
@@ -330,19 +322,5 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
 
     @Override
     public void onNothingSelected() {
-    }
-
-    public static boolean isParsable(String input) {
-        boolean parsable = true;
-        try {
-            Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            parsable = false;
-        }
-        return parsable;
-    }
-
-    public OverviewProductivityFragment() {
-        setHasOptionsMenu(true);
     }
 }

@@ -1,4 +1,4 @@
-package bg.softuni.softuniada.studyrise.Fragments;
+package bg.softuni.softuniada.studyrise.Activities;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -7,19 +7,22 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 
 import java.util.ArrayList;
 
 import bg.softuni.softuniada.studyrise.Adapters.ViewPagerAdapter;
 import bg.softuni.softuniada.studyrise.FragmentLifecycle;
+import bg.softuni.softuniada.studyrise.Fragments.AchievementsFragment;
+import bg.softuni.softuniada.studyrise.Fragments.ActivFragment;
+import bg.softuni.softuniada.studyrise.Fragments.OverviewProductivityFragment;
 import bg.softuni.softuniada.studyrise.Program;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 
-public class ProductivityFragment extends Fragment {
+public class ProductivityActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ArrayList<Program> data;
@@ -33,14 +36,20 @@ public class ProductivityFragment extends Fragment {
     };
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("Program", 0);
+        final ActionBar actionBar = getSupportActionBar();
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setElevation(0);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("Program", 0);
         String programName = sharedPreferences.getString("program", null);
 
         data = new ArrayList<>();
 
-        DBPref pref = new DBPref(getContext());
+        DBPref pref = new DBPref(this);
         Cursor c = pref.getVals("program", null);
 
         if (c.moveToFirst()) {
@@ -61,18 +70,18 @@ public class ProductivityFragment extends Fragment {
         if (programName == null || data.size() == 0) {
             Fragment f;
             f = new OverviewProductivityFragment();
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.container_body, f);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.commit();
         } else {
-            View root = inflater.inflate(R.layout.fragment_productivity, container, false);
+            setContentView(R.layout.fragment_productivity);
 
-            viewPager = (ViewPager) root.findViewById(R.id.view_pager);
+            viewPager = (ViewPager) findViewById(R.id.view_pager);
 
             setupViewPager(viewPager);
 
-            tabLayout = (TabLayout) root.findViewById(R.id.tabs);
+            tabLayout = (TabLayout) findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(viewPager);
             setupTabIcons();
 
@@ -83,9 +92,7 @@ public class ProductivityFragment extends Fragment {
                     fragmentToShow.onResumeFragment();
                 }
             });
-            return root;
         }
-        return null;
     }
 
     private void setupTabIcons() {
@@ -95,10 +102,26 @@ public class ProductivityFragment extends Fragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        adapter = new ViewPagerAdapter(getChildFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new OverviewProductivityFragment(), "Преглед");
         adapter.addFragment(new ActivFragment(), "Активи");
         adapter.addFragment(new AchievementsFragment(), "Награди");
         viewPager.setAdapter(adapter);
     }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_loged, menu);
+        return true;
+    }
+
 }

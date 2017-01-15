@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import bg.softuni.softuniada.studyrise.Adapters.ViewPagerAdapter;
 import bg.softuni.softuniada.studyrise.Fragments.LoginFragment;
-import bg.softuni.softuniada.studyrise.Fragments.ProductivityFragment;
 import bg.softuni.softuniada.studyrise.Fragments.Programs;
 import bg.softuni.softuniada.studyrise.Fragments.QuestionsFragment;
 import bg.softuni.softuniada.studyrise.Fragments.RegistrationFragment;
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             fragmentManager.popBackStack();
             fragmentTransaction.replace(R.id.container_body, fragment);
             fragmentTransaction.commit();
-            getSupportActionBar().setTitle(getString(R.string.app_name));
+            fragmentTransaction.addToBackStack(null);
         }
     }
 
@@ -126,12 +125,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 fragment = new QuestionsFragment();
                 break;
             case 2:
-                SharedPreferences sharedPreferences = getSharedPreferences("ProgramProductivity", 0);
-                programId = sharedPreferences.getString("program", null);
-                if (programId != null)
-                    fragment = new ProductivityFragment();
-                else
-                    fragment = new Programs();
+                fragment = new Programs();
                 break;
             default:
                 break;
@@ -151,8 +145,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }

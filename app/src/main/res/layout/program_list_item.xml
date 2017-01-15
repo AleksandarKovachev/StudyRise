@@ -1,40 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/program_card"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:translationZ="5dp"
+    card_view:cardElevation="10dp"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardUseCompatPadding="true">
 
-    <TextView
-        android:id="@+id/programName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:padding="20dp"
-        android:text="TextView" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/program_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp"
-        android:src="@drawable/ic_fab" />
+        <TextView
+            android:id="@+id/programName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/program_menu"
+            android:layout_toStartOf="@+id/program_menu"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="TextView"
+            android:textSize="25sp" />
 
-    <TextView
-        android:id="@+id/programDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/program_menu"
-        android:layout_toStartOf="@+id/program_menu"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="5dp"
-        android:text="TextView" />
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/program_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/ic_fab" />
+
+        <TextView
+            android:id="@+id/programType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/programName"
+            android:layout_toLeftOf="@+id/programDate"
+            android:gravity="left"
+            android:padding="20dp"
+            android:text="TextView"
+            android:textColor="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/programDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/programName"
+            android:gravity="right"
+            android:padding="20dp"
+            android:text="TextView"
+            android:textColor="@android:color/darker_gray" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

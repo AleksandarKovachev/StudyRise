@@ -23,6 +23,24 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="bg.softuni.softuniada.studyrise.Activities.FinanceActivity"
+            android:label="@string/finance_title"
+            android:parentActivityName="bg.softuni.softuniada.studyrise.Activities.MainActivity"
+            android:theme="@style/MaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bg.softuni.softuniada.studyrise.Activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="bg.softuni.softuniada.studyrise.Activities.ProductivityActivity"
+            android:label="@string/productivity"
+            android:parentActivityName="bg.softuni.softuniada.studyrise.Activities.MainActivity"
+            android:theme="@style/MaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bg.softuni.softuniada.studyrise.Activities.MainActivity" />
+        </activity>
+        <activity
             android:name=".Activities.ScreenSlidePagerActivity"
             android:theme="@style/noAnimTheme" />
     </application>

@@ -1,6 +1,7 @@
 package bg.softuni.softuniada.studyrise.Adapters;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -12,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 
 import java.util.List;
 
@@ -31,10 +35,6 @@ public class ProfitExpenseAdapter extends RecyclerView.Adapter<ProfitExpenseAdap
         this.recyclerView = recyclerView;
     }
 
-    private Context getContext() {
-        return context;
-    }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -47,11 +47,13 @@ public class ProfitExpenseAdapter extends RecyclerView.Adapter<ProfitExpenseAdap
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        YoYo.with(Techniques.FadeInUp).playOn(holder.cardView);
         final Finance finance = listFinances.get(position);
 
         holder.nameTextView.setText(finance.getName());
         holder.valueTextView.setText(finance.getValue() + "");
         holder.dateTextView.setText(finance.getDate());
+        holder.typeTextView.setText(finance.getType());
 
         holder.menu.setTag(new Integer(position));
         holder.menu.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +73,9 @@ public class ProfitExpenseAdapter extends RecyclerView.Adapter<ProfitExpenseAdap
         public TextView nameTextView;
         public TextView valueTextView;
         public TextView dateTextView;
+        public TextView typeTextView;
         public ImageView menu;
+        public CardView cardView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -80,6 +84,8 @@ public class ProfitExpenseAdapter extends RecyclerView.Adapter<ProfitExpenseAdap
             valueTextView = (TextView) itemView.findViewById(R.id.value_finance);
             dateTextView = (TextView) itemView.findViewById(R.id.date);
             menu = (ImageView) itemView.findViewById(R.id.finance_menu);
+            typeTextView = (TextView) itemView.findViewById(R.id.finance_type);
+            cardView = (CardView) itemView.findViewById(R.id.finance_card);
         }
     }
 

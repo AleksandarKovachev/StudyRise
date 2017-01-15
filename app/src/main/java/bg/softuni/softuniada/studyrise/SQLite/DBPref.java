@@ -3,6 +3,8 @@ package bg.softuni.softuniada.studyrise.SQLite;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.provider.Settings;
+import android.util.Log;
 
 public class DBPref extends DBHelper {
 
@@ -64,9 +66,17 @@ public class DBPref extends DBHelper {
             return null;
     }
 
-    public void deleteRecord(String database, String row1, String row2, String value1, String value2) {
-        db.execSQL("delete from  " + database +
-                " where " + row1 + "=\'" + value1 +
-                "\' and " + row2 + " = \'" + value2 + "\'");
+    public void deleteRecord(String table, String... value) {
+        db.execSQL("delete from  " + table +
+                " where " + value[0] + "=\'" + value[2] +
+                "\' and " + value[1] + " = \'" + value[3] + "\'");
+    }
+
+    public void changeItem(String table, String... value) {
+        ContentValues newValues = new ContentValues();
+        newValues.put(value[0], value[1]);
+        newValues.put(value[2], value[3]);
+
+        db.update(table, newValues, String.format("%s = ?", value[4]), new String[]{value[5]});
     }
 }

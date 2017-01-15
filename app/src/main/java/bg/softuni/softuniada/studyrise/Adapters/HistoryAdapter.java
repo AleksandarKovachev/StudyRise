@@ -1,6 +1,7 @@
 package bg.softuni.softuniada.studyrise.Adapters;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -12,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 
 import java.util.List;
 
@@ -30,10 +34,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         this.recyclerView = recyclerView;
     }
 
-    private Context getContext() {
-        return context;
-    }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -46,12 +46,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
+        YoYo.with(Techniques.FadeInUp).playOn(holder.cardView);
         final History history = list.get(position);
 
         holder.historyName.setText(history.getName());
         holder.historyDate.setText(history.getDate());
         holder.historyPoints.setText(history.getPoints());
+
+        if (history.getType().equals("Activ"))
+            holder.historyType.setText("Актив");
+        else holder.historyType.setText("Награда");
 
         holder.menu.setTag(new Integer(position));
         holder.menu.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +75,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         public TextView historyName;
         public TextView historyDate;
         public TextView historyPoints;
+        public TextView historyType;
         public ImageView menu;
+        public CardView cardView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -80,6 +86,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             historyDate = (TextView) itemView.findViewById(R.id.history_date);
             historyPoints = (TextView) itemView.findViewById(R.id.history_points);
             menu = (ImageView) itemView.findViewById(R.id.history_menu);
+            historyType = (TextView) itemView.findViewById(R.id.history_type);
+            cardView = (CardView) itemView.findViewById(R.id.history_card);
         }
     }
 
