@@ -44,30 +44,14 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <bg.softuni.softuniada.studyrise.NonScrollExpandableListView
+                android:id="@+id/list_activ"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:descendantFocusability="beforeDescendants" />
 
-                <bg.softuni.softuniada.studyrise.NonScrollExpandableListView
-                    android:id="@+id/list_activ"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:descendantFocusability="beforeDescendants" />
-
-                <Button
-                    android:id="@+id/addNewActiv"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/list_activ"
-                    android:background="@color/colorPrimary"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:text="@string/addNewActiv"
-                    android:textColor="@android:color/white" />
-
-            </RelativeLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

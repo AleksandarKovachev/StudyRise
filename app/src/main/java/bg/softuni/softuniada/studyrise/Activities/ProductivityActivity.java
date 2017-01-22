@@ -1,5 +1,7 @@
 package bg.softuni.softuniada.studyrise.Activities;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,13 +10,32 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.CalendarView;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Date;
 
+import bg.softuni.softuniada.studyrise.Achievement;
+import bg.softuni.softuniada.studyrise.Activ;
 import bg.softuni.softuniada.studyrise.Adapters.ViewPagerAdapter;
-import bg.softuni.softuniada.studyrise.FragmentLifecycle;
+import bg.softuni.softuniada.studyrise.CalendarDialogBuilder;
 import bg.softuni.softuniada.studyrise.Fragments.AchievementsFragment;
 import bg.softuni.softuniada.studyrise.Fragments.ActivFragment;
 import bg.softuni.softuniada.studyrise.Fragments.OverviewProductivityFragment;
@@ -85,11 +106,39 @@ public class ProductivityActivity extends AppCompatActivity {
             tabLayout.setupWithViewPager(viewPager);
             setupTabIcons();
 
-            viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.right_labels);
+
+            SharedPreferences id = getSharedPreferences("Program", 0);
+            final String programId = id.getString("program", null);
+
+            viewPager.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onPageSelected(int position) {
-                    FragmentLifecycle fragmentToShow = (FragmentLifecycle) adapter.getItem(position);
-                    fragmentToShow.onResumeFragment();
+                public boolean onTouch(View v, MotionEvent event) {
+                    fabMenu.collapse();
+                    return false;
+                }
+            });
+
+            fabMenu.getChildAt(2).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog("Activ", Long.parseLong(programId));
+                    fabMenu.collapse();
+                }
+            });
+
+            fabMenu.getChildAt(1).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog("Achievement", Long.parseLong(programId));
+                    fabMenu.collapse();
+                }
+            });
+
+            fabMenu.getChildAt(0).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showCalendar();
                 }
             });
         }
@@ -122,6 +171,169 @@ public class ProductivityActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_loged, menu);
         return true;
+    }
+
+
+    public void dialog(final String type, final long programId) {
+        LayoutInflater li = LayoutInflater.from(this);
+        View dialogView = li.inflate(R.layout.dialog_input_activ_achievement, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        alertDialogBuilder.setView(dialogView);
+
+        final EditText titleInput, pointsInput;
+        titleInput = (EditText) dialogView.findViewById(R.id.inputActiv);
+        pointsInput = (EditText) dialogView.findViewById(R.id.inputActivPoints);
+
+        if (type.equals("Achievement")) {
+            TextView textDialog = (TextView) dialogView.findViewById(R.id.textDialog);
+            textDialog.setText("Въведи награда: ");
+
+            TextView pointsDialog = (TextView) dialogView.findViewById(R.id.pointsDialog);
+            pointsDialog.setText("Въведи точки за наградата: ");
+        }
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Добави",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                if (type.equals("Activ")) {
+                                    Activ activ = new Activ();
+                                    activ.setTitle(titleInput.getText().toString());
+                                    activ.setPoints(pointsInput.getText().toString());
+
+                                    EventBus.getDefault().post(activ);
+
+                                    DBPref pref = new DBPref(getApplicationContext());
+                                    pref.addRecord(programId, "activ", activ.getTitle(), activ.getPoints());
+                                    pref.close();
+                                } else {
+                                    Achievement achievement = new Achievement();
+                                    achievement.setTitle(titleInput.getText().toString());
+                                    achievement.setPoints(pointsInput.getText().toString());
+
+                                    EventBus.getDefault().post(achievement);
+
+                                    DBPref pref = new DBPref(getApplicationContext());
+                                    pref.addRecord(programId, "achievement", achievement.getTitle(), achievement.getPoints());
+                                    pref.close();
+                                }
+                            }
+                        })
+                .setNegativeButton("Отмени",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+
+        if (titleInput.getText().toString().isEmpty()) {
+            alertDialog.getButton(
+                    AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+            titleInput.setError("Въведете име на актива!");
+        }
+
+        titleInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(s)) {
+                    alertDialog.getButton(
+                            AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                    titleInput.setError("Въведете име на актива!");
+                }
+            }
+        });
+
+        pointsInput.addTextChangedListener(new TextWatcher() {
+                                               @Override
+                                               public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                                   if (TextUtils.isEmpty(s)) {
+                                                       alertDialog.getButton(
+                                                               AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                                       pointsInput.setError("Въведете точки за актива!");
+                                                   }
+                                               }
+
+                                               @Override
+                                               public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                                               }
+
+                                               @Override
+                                               public void afterTextChanged(Editable s) {
+                                                   if (TextUtils.isEmpty(s)) {
+                                                       alertDialog.getButton(
+                                                               AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                                       pointsInput.setError("Въведете точки за актива!");
+                                                   } else if (!isParsable(s.toString())) {
+                                                       pointsInput.setError("Само числа!");
+                                                   } else if (isParsable(s.toString())) {
+                                                       alertDialog.getButton(
+                                                               AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                                                   }
+                                               }
+                                           }
+        );
+
+    }
+
+    public static boolean isParsable(String input) {
+        boolean parsable = true;
+        try {
+            Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            parsable = false;
+        }
+        return parsable;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe
+    public void onEvent(Object object) {
+    }
+
+    public void showCalendar() {
+
+        CalendarDialogBuilder calendar;
+
+        calendar = new CalendarDialogBuilder(this, new CalendarDialogBuilder.OnDateSetListener() {
+            @Override
+            public void onDateSet(int Year, int Month, int Day) {
+                Toast.makeText(getApplicationContext(), Day + "\t" + Month + "\t" + Year, Toast.LENGTH_SHORT).show();
+            }
+        }, System.currentTimeMillis());
+        calendar.showCalendar();
     }
 
 }

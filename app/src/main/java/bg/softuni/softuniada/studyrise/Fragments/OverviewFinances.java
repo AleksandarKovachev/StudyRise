@@ -5,14 +5,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -37,14 +32,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import bg.softuni.softuniada.studyrise.Activities.ScreenSlidePagerActivity;
 import bg.softuni.softuniada.studyrise.Adapters.SpinnerAdapterFinance;
 import bg.softuni.softuniada.studyrise.Finance;
-import bg.softuni.softuniada.studyrise.FragmentLifecycle;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 
-public class OverviewFinances extends Fragment implements FragmentLifecycle, ActionBar.OnNavigationListener {
+public class OverviewFinances extends Fragment implements ActionBar.OnNavigationListener {
 
     protected BarChart mChart;
     private boolean inOverview = false;
@@ -238,15 +231,6 @@ public class OverviewFinances extends Fragment implements FragmentLifecycle, Act
             return mFormat.format(value);
         }
 
-    }
-
-    @Override
-    public void onResumeFragment() {
-        mChart.animateXY(3000, 3000);
-        Profit.profitAdapter.notifyDataSetChanged();
-        Profit.recyclerView.invalidate();
-        Expense.profitAdapter.notifyDataSetChanged();
-        Expense.recyclerView.invalidate();
     }
 
     @Override

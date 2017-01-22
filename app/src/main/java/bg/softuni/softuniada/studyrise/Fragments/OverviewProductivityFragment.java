@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -14,11 +13,11 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -33,6 +32,10 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,26 +43,22 @@ import java.util.List;
 
 import bg.softuni.softuniada.studyrise.Activities.MainActivity;
 import bg.softuni.softuniada.studyrise.Adapters.HistoryAdapter;
-import bg.softuni.softuniada.studyrise.FragmentLifecycle;
 import bg.softuni.softuniada.studyrise.History;
+import bg.softuni.softuniada.studyrise.Points;
 import bg.softuni.softuniada.studyrise.Profile;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
-public class OverviewProductivityFragment extends Fragment implements FragmentLifecycle, OnChartValueSelectedListener {
+public class OverviewProductivityFragment extends Fragment implements OnChartValueSelectedListener {
 
     public static Profile profile;
     private String programId;
-    private boolean inOverview = false;
 
     private RecyclerView recyclerView;
     private HistoryAdapter adapter;
     private List<History> list;
 
     private int dailyPoints = 0;
-
-    private TextView profilePoints;
 
     private PieChart mChart;
 
@@ -71,9 +70,6 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("Program", 0);
         programId = sharedPreferences.getString("program", null);
 
-        inOverview = true;
-
-        profilePoints = (TextView) root.findViewById(R.id.pointsProfile);
 
         SharedPreferences sharedPreferencesPoints = getContext().getSharedPreferences("ProfilePoints", 0);
         String points = sharedPreferencesPoints.getString("points", null);
@@ -87,183 +83,134 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
         profile.setId(Long.parseLong(programId));
 
         if (points != null) {
-            profilePoints.setText(points.toString());
             MainActivity.setText(points.toString());
             profile.setPersonalPoints(points, getContext(), "");
-        } else {
 
-            if (profile.getPersonalPoints() == null) {
-                profilePoints.setText("" + profile.getId());
-                profile.setPersonalPoints("0", getContext(), "");
-                MainActivity.setText("" + profile.getId());
-            } else
-                profilePoints.setText(profile.getPersonalPoints());
-        }
+            list = new ArrayList<>();
 
-        if (profile.getPersonalPoints().toString().length() > 2) {
-            profilePoints.setTextSize(40);
-        } else if (profile.getPersonalPoints().toString().length() > 3) {
-            profilePoints.setTextSize(25);
-        }
+            DBPref pref = new DBPref(getContext());
+            Cursor c = pref.getVals("history", programId);
 
-        list = new ArrayList<>();
+            if (c.moveToFirst()) {
+                do {
+                    History history = new History();
+                    history.setType(c.getString(c.getColumnIndex("type")));
+                    history.setName(c.getString(c.getColumnIndex("name")));
+                    history.setDate(c.getString(c.getColumnIndex("date")));
+                    history.setPoints(c.getString(c.getColumnIndex("points")));
+                    list.add(history);
+                } while (c.moveToNext());
+            }
+            c.close();
+            pref.close();
 
-        DBPref pref = new DBPref(getContext());
-        Cursor c = pref.getVals("history", programId);
+            mChart = (PieChart) root.findViewById(R.id.pie_chart);
+            mChart.setUsePercentValues(true);
+            mChart.getDescription().setEnabled(false);
+            mChart.setExtraOffsets(5, 10, 5, 5);
 
-        if (c.moveToFirst()) {
-            do {
-                History history = new History();
-                history.setType(c.getString(c.getColumnIndex("type")));
-                history.setName(c.getString(c.getColumnIndex("name")));
-                history.setDate(c.getString(c.getColumnIndex("date")));
-                history.setPoints(c.getString(c.getColumnIndex("points")));
-                list.add(history);
-            } while (c.moveToNext());
-        }
-        c.close();
-        pref.close();
+            mChart.setDragDecelerationFrictionCoef(0.95f);
 
-        mChart = (PieChart) root.findViewById(R.id.pie_chart);
-        mChart.setUsePercentValues(true);
-        mChart.getDescription().setEnabled(false);
-        mChart.setExtraOffsets(5, 10, 5, 5);
+            mChart.setCenterText(generateCenterSpannableText());
 
-        mChart.setDragDecelerationFrictionCoef(0.95f);
+            mChart.setDrawHoleEnabled(true);
+            mChart.setHoleColor(getResources().getColor(R.color.colorPrimary));
 
-        mChart.setCenterText(generateCenterSpannableText());
+            mChart.setTransparentCircleColor(Color.WHITE);
+            mChart.setTransparentCircleAlpha(110);
 
-        mChart.setDrawHoleEnabled(true);
-        mChart.setHoleColor(getResources().getColor(R.color.colorPrimary));
+            mChart.setHoleRadius(58f);
+            mChart.setTransparentCircleRadius(61f);
 
-        mChart.setTransparentCircleColor(Color.WHITE);
-        mChart.setTransparentCircleAlpha(110);
+            mChart.setDrawCenterText(true);
 
-        mChart.setHoleRadius(58f);
-        mChart.setTransparentCircleRadius(61f);
+            mChart.setRotationAngle(0);
+            // enable rotation of the chart by touch
+            mChart.setRotationEnabled(true);
+            mChart.setHighlightPerTapEnabled(true);
 
-        mChart.setDrawCenterText(true);
+            // add a selection listener
+            mChart.setOnChartValueSelectedListener(this);
 
-        mChart.setRotationAngle(0);
-        // enable rotation of the chart by touch
-        mChart.setRotationEnabled(true);
-        mChart.setHighlightPerTapEnabled(true);
+            dailyPoints = 0;
 
-        // add a selection listener
-        mChart.setOnChartValueSelectedListener(this);
-
-        dailyPoints = 0;
-
-        for (History history : list) {
-            if (history.getType().equals("Activ")) {
-                String[] dateArray = history.getDate().split(" ");
-                String date = dateArray[2] + " " + dateArray[3] + " " + dateArray[4];
-                String datePattern = "dd MMM yyyy";
-                SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
-                String currentDate = dateFormat.format(new Date(System.currentTimeMillis()));
-                if (date.equals(currentDate)) {
-                    dailyPoints += Float.parseFloat(history.getPoints());
+            for (History history : list) {
+                if (history.getType().equals("Activ")) {
+                    String[] dateArray = history.getDate().split(" ");
+                    String date = dateArray[2] + " " + dateArray[3] + " " + dateArray[4];
+                    String datePattern = "dd MMM yyyy";
+                    SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+                    String currentDate = dateFormat.format(new Date(System.currentTimeMillis()));
+                    if (date.equals(currentDate)) {
+                        dailyPoints += Float.parseFloat(history.getPoints());
+                    }
                 }
             }
+
+            if (dailyPoints < 100)
+                setData(100, dailyPoints);
+            else
+                setData(0, dailyPoints);
+
+            mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+
+            // entry label styling
+            mChart.setEntryLabelColor(Color.WHITE);
+            mChart.setEntryLabelTextSize(12f);
+
+            recyclerView = (RecyclerView) root.findViewById(R.id.history_recycler_view);
+
+            adapter = new HistoryAdapter(getContext(), list, recyclerView);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setNestedScrollingEnabled(false);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.clearFocus();
+
+            mChart.setOnChartGestureListener(new OnChartGestureListener() {
+                @Override
+                public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+                }
+
+                @Override
+                public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+                }
+
+                @Override
+                public void onChartLongPressed(MotionEvent me) {
+
+                }
+
+                @Override
+                public void onChartDoubleTapped(MotionEvent me) {
+
+                }
+
+                @Override
+                public void onChartSingleTapped(MotionEvent me) {
+                    mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+                }
+
+                @Override
+                public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+                }
+
+                @Override
+                public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+                }
+
+                @Override
+                public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+                }
+            });
         }
-
-        if (dailyPoints < 100)
-            setData(100, dailyPoints);
-        else
-            setData(0, dailyPoints);
-
-        mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-
-        // entry label styling
-        mChart.setEntryLabelColor(Color.WHITE);
-        mChart.setEntryLabelTextSize(12f);
-
-        recyclerView = (RecyclerView) root.findViewById(R.id.history_recycler_view);
-
-        adapter = new HistoryAdapter(getContext(), list, recyclerView);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setNestedScrollingEnabled(false);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new SlideInUpAnimator());
-        recyclerView.clearFocus();
-
-        mChart.setOnChartGestureListener(new OnChartGestureListener() {
-            @Override
-            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-            }
-
-            @Override
-            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-            }
-
-            @Override
-            public void onChartLongPressed(MotionEvent me) {
-
-            }
-
-            @Override
-            public void onChartDoubleTapped(MotionEvent me) {
-
-            }
-
-            @Override
-            public void onChartSingleTapped(MotionEvent me) {
-                mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-            }
-
-            @Override
-            public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
-            }
-
-            @Override
-            public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
-            }
-
-            @Override
-            public void onChartTranslate(MotionEvent me, float dX, float dY) {
-
-            }
-        });
-
         return root;
-    }
-
-    @Override
-    public void onResumeFragment() {
-        if (profilePoints != null)
-            if (profile.getPersonalPoints() == null) {
-                profilePoints.setText("0");
-                profile.setPersonalPoints("0", getContext(), "init");
-            } else
-                profilePoints.setText(profile.getPersonalPoints());
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.programs) {
-            inOverview = false;
-            SharedPreferences sharedPreferences = getContext().getSharedPreferences("Program", 0);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.clear();
-            editor.commit();
-
-            Fragment f;
-            f = new Programs();
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.container_body, f);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            ft.commit();
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void setData(float range, float points) {
@@ -322,5 +269,33 @@ public class OverviewProductivityFragment extends Fragment implements FragmentLi
 
     @Override
     public void onNothingSelected() {
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(Points points) {
+        dailyPoints += points.getPoints();
+        mChart.setCenterText(generateCenterSpannableText());
+        if (dailyPoints < 100)
+            setData(100, dailyPoints);
+        else
+            setData(0, dailyPoints);
+        mChart.animateY(1400, Easing.EasingOption.EaseInExpo);
+        mChart.invalidate();
     }
 }

@@ -56,6 +56,14 @@
                     android:text="Няма въведени програми за продуктивност."
                     android:textSize="20sp" />
 
+                <Button
+                    android:text="Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/addProgramForProductivity"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/notification" />
+
             </RelativeLayout>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>

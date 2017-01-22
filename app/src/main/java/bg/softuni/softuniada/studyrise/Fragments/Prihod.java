@@ -24,7 +24,6 @@ import bg.softuni.softuniada.studyrise.Finance;
 import bg.softuni.softuniada.studyrise.Helper.SimpleItemTouchHelperCallback;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class Prihod extends Fragment implements View.OnClickListener {
 
@@ -71,7 +70,6 @@ public class Prihod extends Fragment implements View.OnClickListener {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new SlideInUpAnimator());
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(financeAdapter);
         itemTouchHelper = new ItemTouchHelper(callback);

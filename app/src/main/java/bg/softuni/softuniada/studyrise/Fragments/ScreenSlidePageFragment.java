@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import bg.softuni.softuniada.studyrise.Adapters.FinanceAdapter;
 import bg.softuni.softuniada.studyrise.Finance;
 import bg.softuni.softuniada.studyrise.R;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class ScreenSlidePageFragment extends Fragment {
 
@@ -43,11 +42,6 @@ public class ScreenSlidePageFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new
-
-                SlideInUpAnimator()
-
-        );
 
         return rootView;
     }

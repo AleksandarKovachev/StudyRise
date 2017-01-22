@@ -1,10 +1,13 @@
 package bg.softuni.softuniada.studyrise.Fragments;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,7 +32,6 @@ import bg.softuni.softuniada.studyrise.Adapters.ProgramsAdapter;
 import bg.softuni.softuniada.studyrise.Program;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class Programs extends Fragment implements View.OnClickListener {
 
@@ -79,13 +81,29 @@ public class Programs extends Fragment implements View.OnClickListener {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new SlideInUpAnimator());
         recyclerView.setNestedScrollingEnabled(false);
 
         textView = (TextView) root.findViewById(R.id.textAddProgram);
 
         addProgram = (Button) root.findViewById(R.id.addProgramForProductivity);
         addProgram.setOnClickListener(this);
+
+        Button notification = (Button) root.findViewById(R.id.notification);
+
+        notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(getContext())
+                                .setSmallIcon(R.drawable.ic_logo)
+                                .setContentTitle("ПАНДИИИИ")
+                                .setContentText("Здравей, Елена!");
+                NotificationManager mNotificationManager =
+                        (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.notify(1, mBuilder.build());
+
+            }
+        });
 
         return root;
 

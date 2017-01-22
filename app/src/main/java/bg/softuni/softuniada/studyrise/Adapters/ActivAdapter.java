@@ -24,11 +24,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import bg.softuni.softuniada.studyrise.Activ;
+import bg.softuni.softuniada.studyrise.Fragments.OverviewProductivityFragment;
+import bg.softuni.softuniada.studyrise.Points;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 
@@ -198,7 +202,7 @@ public class ActivAdapter extends BaseExpandableListAdapter {
                 Snackbar.make(view, "ИЗПЪЛНЕНО.", Snackbar.LENGTH_LONG).show();
                 finalNumber = (Integer.parseInt(number.toString())) * (Integer.parseInt(activ.getPoints().toString())) + "";
                 profile.setPersonalPoints(finalNumber, context, "activ");
-
+                EventBus.getDefault().post(new Points(Integer.parseInt(finalNumber)));
 
                 DBPref pref = new DBPref(context);
                 String datePattern = "HH:mm:ss EEE dd MMM yyyy";
@@ -243,16 +247,6 @@ public class ActivAdapter extends BaseExpandableListAdapter {
             }
             return false;
         }
-    }
-
-    public static boolean isParsable(String input) {
-        boolean parsable = true;
-        try {
-            Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            parsable = false;
-        }
-        return parsable;
     }
 
     private void dialogChangeItem(final Activ item) {

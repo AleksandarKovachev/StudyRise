@@ -15,7 +15,6 @@ import bg.softuni.softuniada.studyrise.Adapters.ProfitExpenseAdapter;
 import bg.softuni.softuniada.studyrise.Finance;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class Expense extends Fragment {
 
@@ -56,7 +55,6 @@ public class Expense extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new SlideInUpAnimator());
 
         return root;
     }

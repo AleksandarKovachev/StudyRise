@@ -3,6 +3,8 @@ package bg.softuni.softuniada.studyrise;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.greenrobot.eventbus.EventBus;
+
 import bg.softuni.softuniada.studyrise.Activities.MainActivity;
 
 public class Profile {
