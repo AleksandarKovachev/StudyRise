@@ -50,7 +50,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:descendantFocusability="beforeDescendants" />
+                android:descendantFocusability="beforeDescendants"
+                android:paddingBottom="50dp"/>
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

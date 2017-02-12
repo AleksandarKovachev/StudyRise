@@ -1,13 +1,14 @@
 package bg.softuni.softuniada.studyrise.Activities;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -19,7 +20,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,12 +31,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 import bg.softuni.softuniada.studyrise.Achievement;
 import bg.softuni.softuniada.studyrise.Activ;
 import bg.softuni.softuniada.studyrise.Adapters.ViewPagerAdapter;
 import bg.softuni.softuniada.studyrise.CalendarDialogBuilder;
+import bg.softuni.softuniada.studyrise.DateChart;
+import bg.softuni.softuniada.studyrise.DateType;
 import bg.softuni.softuniada.studyrise.Fragments.AchievementsFragment;
 import bg.softuni.softuniada.studyrise.Fragments.ActivFragment;
 import bg.softuni.softuniada.studyrise.Fragments.OverviewProductivityFragment;
@@ -104,6 +107,29 @@ public class ProductivityActivity extends AppCompatActivity {
 
             tabLayout = (TabLayout) findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(viewPager);
+            tabLayout.setOnTabSelectedListener(
+                    new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+
+                        @Override
+                        public void onTabSelected(TabLayout.Tab tab) {
+                            super.onTabSelected(tab);
+                            int tabIconColor = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
+                            tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+                        }
+
+                        @Override
+                        public void onTabUnselected(TabLayout.Tab tab) {
+                            super.onTabUnselected(tab);
+                            int tabIconColor = ContextCompat.getColor(getApplicationContext(), R.color.white);
+                            tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+                        }
+
+                        @Override
+                        public void onTabReselected(TabLayout.Tab tab) {
+                            super.onTabReselected(tab);
+                        }
+                    }
+            );
             setupTabIcons();
 
             final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.right_labels);
@@ -119,7 +145,7 @@ public class ProductivityActivity extends AppCompatActivity {
                 }
             });
 
-            fabMenu.getChildAt(2).setOnClickListener(new View.OnClickListener() {
+            fabMenu.getChildAt(3).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dialog("Activ", Long.parseLong(programId));
@@ -127,7 +153,7 @@ public class ProductivityActivity extends AppCompatActivity {
                 }
             });
 
-            fabMenu.getChildAt(1).setOnClickListener(new View.OnClickListener() {
+            fabMenu.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dialog("Achievement", Long.parseLong(programId));
@@ -135,10 +161,18 @@ public class ProductivityActivity extends AppCompatActivity {
                 }
             });
 
+            fabMenu.getChildAt(1).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fabMenu.collapse();
+                    showCalendar();
+                }
+            });
+
             fabMenu.getChildAt(0).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showCalendar();
+                    fabMenu.collapse();
                 }
             });
         }
@@ -329,10 +363,10 @@ public class ProductivityActivity extends AppCompatActivity {
 
         calendar = new CalendarDialogBuilder(this, new CalendarDialogBuilder.OnDateSetListener() {
             @Override
-            public void onDateSet(int Year, int Month, int Day) {
-                Toast.makeText(getApplicationContext(), Day + "\t" + Month + "\t" + Year, Toast.LENGTH_SHORT).show();
+            public void onDateSet(int Year, int Month, int Day, DateType type) {
+                EventBus.getDefault().post(new DateChart(Year, Month, Day, type));
             }
-        }, System.currentTimeMillis());
+        });
         calendar.showCalendar();
     }
 

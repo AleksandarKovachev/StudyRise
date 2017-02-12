@@ -199,7 +199,7 @@ public class ActivAdapter extends BaseExpandableListAdapter {
                     number = num.getText().toString();
                 else
                     number = points;
-                Snackbar.make(view, "ИЗПЪЛНЕНО.", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, "ИЗПЪЛНИ СЕ: " + activ.getTitle(), Snackbar.LENGTH_LONG).show();
                 finalNumber = (Integer.parseInt(number.toString())) * (Integer.parseInt(activ.getPoints().toString())) + "";
                 profile.setPersonalPoints(finalNumber, context, "activ");
                 EventBus.getDefault().post(new Points(Integer.parseInt(finalNumber)));

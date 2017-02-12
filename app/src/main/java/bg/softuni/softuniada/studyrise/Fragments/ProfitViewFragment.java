@@ -25,7 +25,7 @@ import bg.softuni.softuniada.studyrise.Helper.SimpleItemTouchHelperCallback;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 
-public class Razhod extends Fragment implements View.OnClickListener {
+public class ProfitViewFragment extends Fragment implements View.OnClickListener {
 
     private RecyclerView recyclerView;
 
@@ -45,14 +45,14 @@ public class Razhod extends Fragment implements View.OnClickListener {
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.finance_recycler_view);
 
-        listFinances = new ArrayList<>();
-
         button = (Button) rootView.findViewById(R.id.add_items_finance);
         button.setVisibility(View.VISIBLE);
         button.setOnClickListener(this);
 
+        listFinances = new ArrayList<>();
+
         DBPref pref = new DBPref(getContext());
-        Cursor c = pref.getVals("finance", "Разход");
+        Cursor c = pref.getVals("finance", "Приход");
 
         if (c.moveToFirst()) {
             do {
@@ -64,6 +64,7 @@ public class Razhod extends Fragment implements View.OnClickListener {
 
         c.close();
         pref.close();
+
         financeAdapter = new FinanceAdapter(getContext(), listFinances);
         recyclerView.setAdapter(financeAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -90,7 +91,7 @@ public class Razhod extends Fragment implements View.OnClickListener {
         addFinanceItem = (EditText) dialogView.findViewById(R.id.finance_item_name);
 
         TextView textView = (TextView) dialogView.findViewById(R.id.dialog_text_finance);
-        textView.setText("Добавете нов вид разход:");
+        textView.setText("Добавете нов вид приход:");
 
         alertDialogBuilder
                 .setCancelable(false)
@@ -98,7 +99,7 @@ public class Razhod extends Fragment implements View.OnClickListener {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Finance finance = new Finance();
-                                finance.setType("Разход");
+                                finance.setType("Приход");
                                 finance.setName(addFinanceItem.getText().toString());
 
                                 DBPref pref = new DBPref(getContext());
@@ -143,8 +144,6 @@ public class Razhod extends Fragment implements View.OnClickListener {
                                                           alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
                                                   }
                                               }
-
         );
     }
-
 }
