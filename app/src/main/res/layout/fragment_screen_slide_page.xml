@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/finance_recycler_view"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/ic_add_finances"
+        android:background="@drawable/ic_add_white"
         android:visibility="invisible" />
 
 </RelativeLayout>

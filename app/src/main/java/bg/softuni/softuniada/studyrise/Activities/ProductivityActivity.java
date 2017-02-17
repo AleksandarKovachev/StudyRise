@@ -1,6 +1,7 @@
 package bg.softuni.softuniada.studyrise.Activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
@@ -55,8 +56,8 @@ public class ProductivityActivity extends AppCompatActivity {
 
     private int[] tabIcons = {
             R.drawable.ic_home,
-            R.drawable.ic_todo,
-            R.drawable.ic_achievements
+            R.drawable.ic_activ,
+            R.drawable.ic_achievement_tab
     };
 
     @Override
@@ -172,6 +173,8 @@ public class ProductivityActivity extends AppCompatActivity {
             fabMenu.getChildAt(0).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), TodoActivity.class);
+                    startActivity(intent);
                     fabMenu.collapse();
                 }
             });

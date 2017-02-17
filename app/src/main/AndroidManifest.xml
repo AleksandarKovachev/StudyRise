@@ -25,24 +25,33 @@
         <activity
             android:name=".Activities.FinanceActivity"
             android:label="@string/finance_title"
-            android:parentActivityName="bg.softuni.softuniada.studyrise.Activities.MainActivity"
+            android:parentActivityName=".Activities.MainActivity"
             android:theme="@style/MaterialTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="bg.softuni.softuniada.studyrise.Activities.MainActivity" />
+                android:value=".Activities.MainActivity" />
         </activity>
         <activity
             android:name=".Activities.ProductivityActivity"
             android:label="@string/productivity"
-            android:parentActivityName="bg.softuni.softuniada.studyrise.Activities.MainActivity"
+            android:parentActivityName=".Activities.MainActivity"
             android:theme="@style/MaterialTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="bg.softuni.softuniada.studyrise.Activities.MainActivity" />
+                android:value=".Activities.MainActivity" />
         </activity>
         <activity
             android:name=".Activities.ScreenSlidePagerActivity"
             android:theme="@style/noAnimTheme" />
+        <activity
+            android:name=".Activities.TodoActivity"
+            android:label="TODO списък"
+            android:parentActivityName=".Activities.ProductivityActivity"
+            android:theme="@style/MaterialTheme">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".Activities.ProductivityActivity" />
+        </activity>
     </application>
 
 </manifest>

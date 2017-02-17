@@ -11,7 +11,7 @@ import java.util.Date;
 public class DBHelper extends SQLiteOpenHelper {
 
     static final String DB_NAME = "studyrise";
-    static final int CURRENT_VERSION = 4;
+    static final int CURRENT_VERSION = 5;
     protected SQLiteDatabase db;
 
     public DBHelper(Context context) {
@@ -19,34 +19,71 @@ public class DBHelper extends SQLiteOpenHelper {
         open();
     }
 
+    private final String programSql = "create table " + DBConstants.PROGRAM_TABLE + " ("
+            + "_id integer primary key autoincrement, "
+            + "programName text not null, "
+            + "date text not null, "
+            + "program_type text not null);";
+
+    private final String activSql = "create table " + DBConstants.ACTIV_TABLE + " ("
+            + "_id integer primary key autoincrement, "
+            + "activTitle text not null, "
+            + "points text not null, "
+            + "programId integer, "
+            + "FOREIGN KEY(programId) REFERENCES program(_id) "
+            + "ON DELETE CASCADE);";
+
+    private final String achievementSql = "create table " + DBConstants.ACHIEVEMENT_TABLE + " ("
+            + "_id integer primary key autoincrement, "
+            + "achievement text not null, "
+            + "points text not null, "
+            + "programId integer, "
+            + "FOREIGN KEY(programId) REFERENCES program(_id) "
+            + "ON DELETE CASCADE);";
+
+    private final String financeSql = "create table " + DBConstants.FINANCE_TABLE + " ("
+            + "_id integer primary key autoincrement, "
+            + "type text not null, "
+            + "name text not null);";
+
+    private final String profitExpenseSql = "create table " + DBConstants.PROFIT_EXPENSE_TABLE + " ("
+            + "_id integer primary key autoincrement, "
+            + "type text not null, "
+            + "name text not null, "
+            + "value real not null, "
+            + "programId integer, "
+            + "date text not null, "
+            + "FOREIGN KEY(programId) REFERENCES program(_id) "
+            + "ON DELETE CASCADE);";
+
+    private final String historySql = "create table " + DBConstants.HISTORY_TABLE + " ("
+            + "_id integer primary key autoincrement, "
+            + "type text not null, "
+            + "name text not null, "
+            + "date text not null, "
+            + "programId integer, "
+            + "points text not null, "
+            + "FOREIGN KEY(programId) REFERENCES program(_id) "
+            + "ON DELETE CASCADE);";
+
+    private final String todoSql = "create table " + DBConstants.TODO_TABLE + " (" +
+            "_id integer primary key autoincrement," +
+            "priority text not null, " +
+            "date text not null," +
+            "activId integer," +
+            "achievementId integer," +
+            "FOREIGN KEY (activId) REFERENCES activ(_id) ON DELETE CASCADE," +
+            "FOREIGN KEY (achievementId) REFERENCES achievement(_id) ON DELETE CASCADE);";
+
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table program ("
-                + "_id integer primary key autoincrement, "
-                + "programName text not null, "
-                + "date text not null, "
-                + "program_type text not null);");
+        db.execSQL(programSql);
 
-        db.execSQL("create table activ ("
-                + "_id integer primary key autoincrement, "
-                + "activTitle text not null, "
-                + "points text not null, "
-                + "programId integer, "
-                + "FOREIGN KEY(programId) REFERENCES program(_id) "
-                + "ON DELETE CASCADE);");
+        db.execSQL(activSql);
 
-        db.execSQL("create table achievement ("
-                + "_id integer primary key autoincrement, "
-                + "achievement text not null, "
-                + "points text not null, "
-                + "programId integer, "
-                + "FOREIGN KEY(programId) REFERENCES program(_id) "
-                + "ON DELETE CASCADE);");
+        db.execSQL(achievementSql);
 
-        db.execSQL("create table finance ("
-                + "_id integer primary key autoincrement, "
-                + "type text not null, "
-                + "name text not null);");
+        db.execSQL(financeSql);
 
         db.execSQL("INSERT INTO finance VALUES(null, 'Разход', 'Храна');");
         db.execSQL("INSERT INTO finance VALUES(null, 'Разход', 'Транспорт');");
@@ -55,34 +92,18 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO finance VALUES(null, 'Приход', 'Стипендия');");
         db.execSQL("INSERT INTO finance VALUES(null, 'Приход', 'Заплата');");
 
-        db.execSQL("create table profit_expense ("
-                + "_id integer primary key autoincrement, "
-                + "type text not null, "
-                + "name text not null, "
-                + "value real not null, "
-                + "programId integer, "
-                + "date text not null, "
-                + "FOREIGN KEY(programId) REFERENCES program(_id) "
-                + "ON DELETE CASCADE);");
+        db.execSQL(profitExpenseSql);
 
-        db.execSQL("create table history ("
-                + "_id integer primary key autoincrement, "
-                + "type text not null, "
-                + "name text not null, "
-                + "date text not null, "
-                + "programId integer, "
-                + "points text not null, "
-                + "FOREIGN KEY(programId) REFERENCES program(_id) "
-                + "ON DELETE CASCADE);");
+        db.execSQL(historySql);
+
+        db.execSQL(todoSql);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
-            db.execSQL("create table finance ("
-                    + "_id integer primary key autoincrement, "
-                    + "type text not null, "
-                    + "name text not null);");
+            db.execSQL(financeSql);
 
             db.execSQL("INSERT INTO finance VALUES(null, 'Разход', 'Храна');");
             db.execSQL("INSERT INTO finance VALUES(null, 'Разход', 'Транспорт');");
@@ -91,14 +112,7 @@ public class DBHelper extends SQLiteOpenHelper {
             db.execSQL("INSERT INTO finance VALUES(null, 'Приход', 'Стипендия');");
             db.execSQL("INSERT INTO finance VALUES(null, 'Приход', 'Заплата');");
 
-            db.execSQL("create table profit_expense ("
-                    + "_id integer primary key autoincrement, "
-                    + "type text not null, "
-                    + "name text not null, "
-                    + "value real not null, "
-                    + "programId integer, "
-                    + "FOREIGN KEY(programId) REFERENCES program(_id) "
-                    + "ON DELETE CASCADE);");
+            db.execSQL(profitExpenseSql);
         }
 
         if (oldVersion < 3) {
@@ -109,15 +123,10 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         if (oldVersion < 4) {
-            db.execSQL("create table history ("
-                    + "_id integer primary key autoincrement, "
-                    + "type text not null, "
-                    + "name text not null, "
-                    + "date text not null, "
-                    + "points text not null, "
-                    + "programId integer, "
-                    + "FOREIGN KEY(programId) REFERENCES program(_id) "
-                    + "ON DELETE CASCADE);");
+            db.execSQL(historySql);
+        }
+        if (oldVersion < 5) {
+            db.execSQL(todoSql);
         }
     }
 
