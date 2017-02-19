@@ -20,4 +20,12 @@
         <item>Месечен</item>
         <item>Годишен</item>
     </string-array>
+
+    <string-array name="todo_priority">
+        <item>Висок приоритет</item>
+        <item>Среден приоритет</item>
+        <item>Нормален приоритет</item>
+        <item>Нисък приоритет</item>
+        <item>Без приоритет</item>
+    </string-array>
 </resources>

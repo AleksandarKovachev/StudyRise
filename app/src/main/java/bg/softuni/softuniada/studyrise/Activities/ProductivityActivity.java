@@ -21,10 +21,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
@@ -32,7 +30,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import bg.softuni.softuniada.studyrise.Achievement;
 import bg.softuni.softuniada.studyrise.Activ;
@@ -53,6 +50,8 @@ public class ProductivityActivity extends AppCompatActivity {
     private ArrayList<Program> data;
     private ViewPagerAdapter adapter;
     private ViewPager viewPager;
+
+    private FloatingActionsMenu fabMenu;
 
     private int[] tabIcons = {
             R.drawable.ic_home,
@@ -100,7 +99,7 @@ public class ProductivityActivity extends AppCompatActivity {
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.commit();
         } else {
-            setContentView(R.layout.fragment_productivity);
+            setContentView(R.layout.activity_productivity);
 
             viewPager = (ViewPager) findViewById(R.id.view_pager);
 
@@ -133,7 +132,7 @@ public class ProductivityActivity extends AppCompatActivity {
             );
             setupTabIcons();
 
-            final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.right_labels);
+            fabMenu = (FloatingActionsMenu) findViewById(R.id.floating_actions_menu);
 
             SharedPreferences id = getSharedPreferences("Program", 0);
             final String programId = id.getString("program", null);
@@ -173,7 +172,7 @@ public class ProductivityActivity extends AppCompatActivity {
             fabMenu.getChildAt(0).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), TodoActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), CheckListActivity.class);
                     startActivity(intent);
                     fabMenu.collapse();
                 }
@@ -372,5 +371,4 @@ public class ProductivityActivity extends AppCompatActivity {
         });
         calendar.showCalendar();
     }
-
 }

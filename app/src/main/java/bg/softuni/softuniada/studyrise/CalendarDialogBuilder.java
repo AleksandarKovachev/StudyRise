@@ -14,6 +14,8 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.Date;
 
+import bg.softuni.softuniada.studyrise.Animations.ViewAnimations;
+
 public class CalendarDialogBuilder {
 
     public interface OnDateSetListener {
@@ -98,23 +100,9 @@ public class CalendarDialogBuilder {
                 text.setText("Избери година:");
 
                 text.setVisibility(View.VISIBLE);
-                text.setAlpha(0.f);
-                text.setScaleX(0.f);
-                text.setScaleY(0.f);
-                text.animate()
-                        .alpha(1.f)
-                        .scaleX(1.f).scaleY(1.f)
-                        .setDuration(500)
-                        .start();
+                ViewAnimations.fadeAnimateZoom(text);
                 yearPicker.setVisibility(View.VISIBLE);
-                yearPicker.setAlpha(0.f);
-                yearPicker.setScaleX(0.f);
-                yearPicker.setScaleY(0.f);
-                yearPicker.animate()
-                        .alpha(1.f)
-                        .scaleX(1.f).scaleY(1.f)
-                        .setDuration(500)
-                        .start();
+                ViewAnimations.fadeAnimateZoom(yearPicker);
 
                 yearPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                     @Override
@@ -141,32 +129,13 @@ public class CalendarDialogBuilder {
                                          text.setText("Избери месец:");
 
                                          text.setVisibility(View.VISIBLE);
-                                         text.setAlpha(0.f);
-                                         text.setScaleX(0.f);
-                                         text.setScaleY(0.f);
-                                         text.animate()
-                                                 .alpha(1.f)
-                                                 .scaleX(1.f).scaleY(1.f)
-                                                 .setDuration(500)
-                                                 .start();
+                                         ViewAnimations.fadeAnimateZoom(text);
+
                                          monthPicker.setVisibility(View.VISIBLE);
-                                         monthPicker.setAlpha(0.f);
-                                         monthPicker.setScaleX(0.f);
-                                         monthPicker.setScaleY(0.f);
-                                         monthPicker.animate()
-                                                 .alpha(1.f)
-                                                 .scaleX(1.f).scaleY(1.f)
-                                                 .setDuration(500)
-                                                 .start();
+                                         ViewAnimations.fadeAnimateZoom(monthPicker);
+
                                          yearMonthPicker.setVisibility(View.VISIBLE);
-                                         yearMonthPicker.setAlpha(0.f);
-                                         yearMonthPicker.setScaleX(0.f);
-                                         yearMonthPicker.setScaleY(0.f);
-                                         yearMonthPicker.animate()
-                                                 .alpha(1.f)
-                                                 .scaleX(1.f).scaleY(1.f)
-                                                 .setDuration(500)
-                                                 .start();
+                                         ViewAnimations.fadeAnimateZoom(yearMonthPicker);
 
                                          MONTH = calendar.get(Calendar.MONTH);
                                          YEAR = calendar.get(Calendar.YEAR);
@@ -203,24 +172,11 @@ public class CalendarDialogBuilder {
                 text.setText("Избери ден на някоя седмица:");
 
                 text.setVisibility(View.VISIBLE);
-                text.setAlpha(0.f);
-                text.setScaleX(0.f);
-                text.setScaleY(0.f);
-                text.animate()
-                        .alpha(1.f)
-                        .scaleX(1.f).scaleY(1.f)
-                        .setDuration(500)
-                        .start();
+                ViewAnimations.fadeAnimateZoom(text);
+
                 weekPicker.setVisibility(View.VISIBLE);
                 weekPicker.setVisibility(View.VISIBLE);
-                weekPicker.setAlpha(0.f);
-                weekPicker.setScaleX(0.f);
-                weekPicker.setScaleY(0.f);
-                weekPicker.animate()
-                        .alpha(1.f)
-                        .scaleX(1.f).scaleY(1.f)
-                        .setDuration(500)
-                        .start();
+                ViewAnimations.fadeAnimateZoom(weekPicker);
 
                 YEAR = calendar.get(Calendar.YEAR);
                 MONTH = calendar.get(Calendar.MONTH);
@@ -253,15 +209,7 @@ public class CalendarDialogBuilder {
                                          weekPicker.setVisibility(View.INVISIBLE);
                                          text.setVisibility(View.INVISIBLE);
 
-                                         datePicker.setVisibility(View.VISIBLE);
-                                         datePicker.setAlpha(0.f);
-                                         datePicker.setScaleX(0.f);
-                                         datePicker.setScaleY(0.f);
-                                         datePicker.animate()
-                                                 .alpha(1.f)
-                                                 .scaleX(1.f).scaleY(1.f)
-                                                 .setDuration(500)
-                                                 .start();
+                                         ViewAnimations.fadeAnimateZoom(datePicker);
                                      }
                                  }
 

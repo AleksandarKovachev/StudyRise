@@ -44,13 +44,22 @@
             android:name=".Activities.ScreenSlidePagerActivity"
             android:theme="@style/noAnimTheme" />
         <activity
-            android:name=".Activities.TodoActivity"
-            android:label="TODO списък"
+            android:name=".Activities.CheckListActivity"
+            android:label="Списък"
             android:parentActivityName=".Activities.ProductivityActivity"
             android:theme="@style/MaterialTheme">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".Activities.ProductivityActivity" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.ProductivityActivity" />
+        </activity>
+        <activity
+            android:name=".Activities.TodoActivity"
+            android:label="TODO"
+            android:parentActivityName=".Activities.CheckListActivity"
+            android:theme="@style/MaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.CheckListActivity" />
         </activity>
     </application>
 

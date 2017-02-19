@@ -40,7 +40,6 @@ import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 public class OverviewFinances extends Fragment implements ActionBar.OnNavigationListener {
 
     protected BarChart mChart;
-    private boolean inOverview = false;
 
     private Cursor c;
     private DBPref pref;
@@ -51,8 +50,6 @@ public class OverviewFinances extends Fragment implements ActionBar.OnNavigation
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View root = inflater.inflate(R.layout.finance_overview_fragment, container, false);
-
-        inOverview = true;
 
         Spinner spinner = (Spinner) root.findViewById(R.id.spinner_finance);
 
