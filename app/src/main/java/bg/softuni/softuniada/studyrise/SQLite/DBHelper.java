@@ -11,7 +11,7 @@ import java.util.Date;
 public class DBHelper extends SQLiteOpenHelper {
 
     static final String DB_NAME = "studyrise";
-    static final int CURRENT_VERSION = 5;
+    static final int CURRENT_VERSION = 6;
     protected SQLiteDatabase db;
 
     public DBHelper(Context context) {
@@ -30,8 +30,11 @@ public class DBHelper extends SQLiteOpenHelper {
             + "activTitle text not null, "
             + "points text not null, "
             + "programId integer, "
+            + "todoId integer default null,"
             + "FOREIGN KEY(programId) REFERENCES program(_id) "
-            + "ON DELETE CASCADE);";
+            + "ON DELETE CASCADE, "
+            + "FOREIGN KEY(todoId) REFERENCES "
+            + DBConstants.TODO_TABLE + "(_id));";
 
     private final String achievementSql = "create table " + DBConstants.ACHIEVEMENT_TABLE + " ("
             + "_id integer primary key autoincrement, "
@@ -68,12 +71,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private final String todoSql = "create table " + DBConstants.TODO_TABLE + " (" +
             "_id integer primary key autoincrement," +
+            "name text not null, " +
             "priority text not null, " +
-            "date text not null," +
-            "activId integer," +
-            "achievementId integer," +
-            "FOREIGN KEY (activId) REFERENCES activ(_id) ON DELETE CASCADE," +
-            "FOREIGN KEY (achievementId) REFERENCES achievement(_id) ON DELETE CASCADE);";
+            "date text not null);";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -119,7 +119,7 @@ public class DBHelper extends SQLiteOpenHelper {
             String datePattern = "HH:mm:ss EEE dd MMM yyyy";
             SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
             String date = dateFormat.format(new Date(System.currentTimeMillis()));
-            db.execSQL("ALTER TABLE profit_expense ADD COLUMN date text DEFAULT ('" + date + "');");
+            db.execSQL("ALTER TABLE " + DBConstants.PROFIT_EXPENSE_TABLE + " ADD COLUMN date text DEFAULT ('" + date + "');");
         }
 
         if (oldVersion < 4) {
@@ -127,6 +127,10 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         if (oldVersion < 5) {
             db.execSQL(todoSql);
+        }
+        if (oldVersion < 6) {
+            db.execSQL("ALTER TABLE " + DBConstants.ACTIV_TABLE + " ADD COLUMN todoId integer DEFAULT null, " +
+                    "FOREIGN KEY(todoId) REFERENCES " + DBConstants.TODO_TABLE + "(_id);");
         }
     }
 

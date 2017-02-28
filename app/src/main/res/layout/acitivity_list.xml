@@ -2,41 +2,47 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_todo"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <View
-            android:id="@+id/view_help"
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:layout_marginLeft="26dp"
-            android:background="#b3b3b3" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/todo_recycler_view"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/background_light"
-            android:clipToPadding="false"
-            android:fadeScrollbars="true"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:scrollbars="vertical"
-            app:layoutManager="LinearLayoutManager"/>
+            android:layout_height="match_parent">
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/todoFabButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="20dp"
-            app:fab_colorNormal="@color/colorAccent"
-            app:fab_colorPressed="@color/colorAccentDark"
-            app:fab_icon="@drawable/ic_add_white"
-            app:fab_title="TODO списък" />
+            <View
+                android:id="@+id/view_help"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="26dp"
+                android:background="#b3b3b3" />
 
-    </RelativeLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/todo_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/background_light"
+                android:clipToPadding="false"
+                android:fadeScrollbars="true"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:scrollbars="vertical"
+                app:layoutManager="LinearLayoutManager" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/todoFabButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="20dp"
+                app:fab_colorNormal="@color/colorAccent"
+                app:fab_colorPressed="@color/colorAccentDark"
+                app:fab_icon="@drawable/ic_add_white"
+                app:fab_title="TODO списък" />
+
+        </RelativeLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </layout>

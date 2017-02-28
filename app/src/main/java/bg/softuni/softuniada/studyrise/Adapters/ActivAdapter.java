@@ -3,6 +3,8 @@ package bg.softuni.softuniada.studyrise.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -16,25 +18,28 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import bg.softuni.softuniada.studyrise.Activ;
-import bg.softuni.softuniada.studyrise.Fragments.OverviewProductivityFragment;
 import bg.softuni.softuniada.studyrise.Points;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
+import bg.softuni.softuniada.studyrise.TodoActiv;
 
 import static bg.softuni.softuniada.studyrise.Fragments.OverviewProductivityFragment.profile;
 
@@ -42,18 +47,20 @@ public class ActivAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private int layoutId;
-    private List<Activ> data;
+    private List<TodoActiv> data;
     private ExpandableListView listView;
     private String number;
     private String finalNumber;
     private String programId;
+    private Calendar calendar;
 
-    public ActivAdapter(Context context, int resource, List<Activ> objects, ExpandableListView listView, String programId) {
+    public ActivAdapter(Context context, int resource, List<TodoActiv> objects, ExpandableListView listView, Calendar calendar, String programId) {
         this.context = context;
         layoutId = resource;
         data = objects;
         this.listView = listView;
         this.programId = programId;
+        this.calendar = calendar;
     }
 
     private void showPopupMenu(View view, int position) {
@@ -105,9 +112,54 @@ public class ActivAdapter extends BaseExpandableListAdapter {
 
         View row = inflater.inflate(layoutId, parent, false);
 
+        String[] array = context.getResources()
+                .getStringArray(R.array.todo_priority);
+
         TextView title = (TextView) row.findViewById(R.id.activTitle);
         TextView points = (TextView) row.findViewById(R.id.activPoints);
-        ImageView menu = (ImageView) row.findViewById(R.id.finance_menu);
+        ImageView menu = (ImageView) row.findViewById(R.id.activ_menu);
+        final ImageView priority = (ImageView) row.findViewById(R.id.activ_priority);
+
+        if (data.get(groupPosition).getDate() != null) {
+            String[] date = data.get(groupPosition).getDate().split("\\.");
+
+            int day = Integer.parseInt(date[0]);
+            int month = Integer.parseInt(date[1]);
+            int year = Integer.parseInt(date[2]);
+
+            int priorityNumber = 0;
+
+            if (day == (calendar.get(Calendar.DAY_OF_MONTH)) && month == (calendar.get(Calendar.MONTH) + 1) && year == (calendar.get(Calendar.YEAR))) {
+                priorityNumber = getPriorityPosition(data.get(groupPosition).getPriority(), array);
+                Drawable drawable = null;
+                switch (priorityNumber) {
+                    case 0:
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_one);
+                        break;
+                    case 1:
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_two);
+                        break;
+                    case 2:
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_three);
+                        break;
+                    case 3:
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_four);
+                        break;
+                    case 4:
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_five);
+                        break;
+                }
+                priority.setImageDrawable(drawable);
+                priority.setVisibility(View.VISIBLE);
+            }
+            final String priorityValue = array[priorityNumber];
+            priority.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    displayPopupWindow(priority, priorityValue);
+                }
+            });
+        }
 
         title.setText(data.get(groupPosition).getTitle());
         points.setText(data.get(groupPosition).getPoints());
@@ -216,6 +268,21 @@ public class ActivAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    private void displayPopupWindow(View anchorView, String text) {
+        PopupWindow popup = new PopupWindow();
+        LayoutInflater li = LayoutInflater.from(context);
+        View layout = li.inflate(R.layout.popup_content, null);
+        TextView textView = (TextView) layout.findViewById(R.id.popup_text);
+        textView.setText(text);
+        popup.setContentView(layout);
+        popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popup.setOutsideTouchable(true);
+        popup.setFocusable(true);
+        popup.setBackgroundDrawable(new BitmapDrawable());
+        popup.showAsDropDown(anchorView);
+    }
+
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
@@ -287,5 +354,9 @@ public class ActivAdapter extends BaseExpandableListAdapter {
 
         final AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    private int getPriorityPosition(String priority, String[] array) {
+        return Arrays.asList(array).indexOf(priority);
     }
 }

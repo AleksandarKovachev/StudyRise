@@ -61,7 +61,6 @@ public class DatePickerDialog {
                 })
                 .setNegativeButton("Откажи", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        dateSetlistener.onDateSet(YEAR, MONTH, DAY);
                     }
                 });
 

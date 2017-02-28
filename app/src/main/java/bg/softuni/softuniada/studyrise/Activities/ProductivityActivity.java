@@ -32,7 +32,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 
 import bg.softuni.softuniada.studyrise.Achievement;
-import bg.softuni.softuniada.studyrise.Activ;
 import bg.softuni.softuniada.studyrise.Adapters.ViewPagerAdapter;
 import bg.softuni.softuniada.studyrise.CalendarDialogBuilder;
 import bg.softuni.softuniada.studyrise.DateChart;
@@ -43,6 +42,7 @@ import bg.softuni.softuniada.studyrise.Fragments.OverviewProductivityFragment;
 import bg.softuni.softuniada.studyrise.Program;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
+import bg.softuni.softuniada.studyrise.TodoActiv;
 
 public class ProductivityActivity extends AppCompatActivity {
 
@@ -236,7 +236,7 @@ public class ProductivityActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 if (type.equals("Activ")) {
-                                    Activ activ = new Activ();
+                                    TodoActiv activ = new TodoActiv();
                                     activ.setTitle(titleInput.getText().toString());
                                     activ.setPoints(pointsInput.getText().toString());
 

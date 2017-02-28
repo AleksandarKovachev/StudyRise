@@ -52,15 +52,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.ProductivityActivity" />
         </activity>
-        <activity
-            android:name=".Activities.TodoActivity"
-            android:label="TODO"
-            android:parentActivityName=".Activities.CheckListActivity"
-            android:theme="@style/MaterialTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.CheckListActivity" />
-        </activity>
     </application>
 
 </manifest>

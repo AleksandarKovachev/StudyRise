@@ -3,8 +3,6 @@ package bg.softuni.softuniada.studyrise.SQLite;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.Settings;
-import android.util.Log;
 
 public class DBPref extends DBHelper {
 
@@ -44,37 +42,50 @@ public class DBPref extends DBHelper {
             contentValues.put("points", value[4]);
             contentValues.put("programId", id);
         } else if (value[0].equals(DBConstants.TODO_TABLE)) {
-            contentValues.put("priority", value[1]);
+            contentValues.put("name", value[1]);
             contentValues.put("date", value[2]);
-            contentValues.put("activId", value[3]);
-            contentValues.put("achievementId", value[4]);
+            contentValues.put("priority", value[3]);
         }
         this.db.insert(value[0], null, contentValues);
     }
 
     public Cursor getVals(String... value) {
-        if (value[0].equals(DBConstants.PROGRAM_TABLE))
-            return this.db.query(value[0], new String[]{"_id", "programName", "date", "program_type"}, null, null, null, null, null);
-        else if (value[0].equals(DBConstants.ACTIV_TABLE))
-            return this.db.query(value[0], new String[]{"activTitle", "points"}, "programId=?", new String[]{value[1]}, null, null, null);
-        else if (value[0].equals(DBConstants.ACHIEVEMENT_TABLE))
-            return this.db.query(value[0], new String[]{"achievement", "points"}, "programId=?", new String[]{value[1]}, null, null, null);
-        else if (value[0].equals(DBConstants.FINANCE_TABLE))
-            return this.db.query(value[0], new String[]{"name"}, "type=?", new String[]{value[1]}, null, null, null);
-        else if (value[0].equals(DBConstants.PROFIT_EXPENSE_TABLE) && value[1].isEmpty())
-            return this.db.query(value[0], new String[]{"type", "name", "value", "date"}, null, null, null, null, null);
-        else if (value[0].equals(DBConstants.PROFIT_EXPENSE_TABLE))
-            return this.db.query(value[0], new String[]{"type", "name", "value", "date"}, "type=?", new String[]{value[1]}, null, null, "_id DESC");
-        else if (value[0].equals(DBConstants.HISTORY_TABLE))
-            return this.db.query(value[0], new String[]{"type", "name", "date", "points"}, "programId=?", new String[]{value[1]}, null, null, "_id DESC");
-        else
-            return null;
+        switch (value[0]) {
+            case DBConstants.PROGRAM_TABLE:
+                return this.db.query(value[0], new String[]{"_id", "programName", "date", "program_type"}, null, null, null, null, null);
+            case DBConstants.ACTIV_TABLE:
+                return this.db.query(value[0], new String[]{"_id", "activTitle", "points", "todoId"}, "programId=?", new String[]{value[1]}, null, null, null);
+            case DBConstants.ACHIEVEMENT_TABLE:
+                return this.db.query(value[0], new String[]{"achievement", "points"}, "programId=?", new String[]{value[1]}, null, null, null);
+            case DBConstants.FINANCE_TABLE:
+                return this.db.query(value[0], new String[]{"name"}, "type=?", new String[]{value[1]}, null, null, null);
+            case DBConstants.PROFIT_EXPENSE_TABLE:
+                if (value[1].isEmpty())
+                    return this.db.query(value[0], new String[]{"type", "name", "value", "date"}, null, null, null, null, null);
+                else
+                    return this.db.query(value[0], new String[]{"type", "name", "value", "date"}, "type=?", new String[]{value[1]}, null, null, "_id DESC");
+            case DBConstants.HISTORY_TABLE:
+                return this.db.query(value[0], new String[]{"type", "name", "date", "points"}, "programId=?", new String[]{value[1]}, null, null, "_id DESC");
+            case DBConstants.TODO_TABLE:
+                return this.db.query(value[0], new String[]{"_id", "name", "date", "priority"}, null, null, null, null, null);
+            default:
+                return null;
+
+        }
     }
 
     public void deleteRecord(String table, String... value) {
         db.execSQL("delete from  " + table +
                 " where " + value[0] + "=\'" + value[2] +
                 "\' and " + value[1] + " = \'" + value[3] + "\'");
+    }
+
+    public Cursor getRawQuery(String sql, String[] params) {
+        return db.rawQuery(sql, params);
+    }
+
+    public void execSql(String sql) {
+        db.execSQL(sql);
     }
 
     public void changeItem(String table, String... value) {

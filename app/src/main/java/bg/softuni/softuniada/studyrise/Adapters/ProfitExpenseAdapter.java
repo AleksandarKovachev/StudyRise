@@ -83,7 +83,7 @@ public class ProfitExpenseAdapter extends RecyclerView.Adapter<ProfitExpenseAdap
             nameTextView = (TextView) itemView.findViewById(R.id.name_finance);
             valueTextView = (TextView) itemView.findViewById(R.id.value_finance);
             dateTextView = (TextView) itemView.findViewById(R.id.date);
-            menu = (ImageView) itemView.findViewById(R.id.finance_menu);
+            menu = (ImageView) itemView.findViewById(R.id.activ_menu);
             typeTextView = (TextView) itemView.findViewById(R.id.finance_type);
             cardView = (CardView) itemView.findViewById(R.id.finance_card);
         }

@@ -6,9 +6,12 @@ import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -39,22 +42,22 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ViewHo
     public TodoListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        View financeView = inflater.inflate(R.layout.todo_list_item, parent, false);
+        View financeView = inflater.inflate(R.layout.dialog_todo_list_item, parent, false);
 
         TodoListAdapter.ViewHolder viewHolder = new TodoListAdapter.ViewHolder(financeView);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(TodoListAdapter.ViewHolder holder, int position) {
-        final Todo todo = todoList.get(position);
-
+    public void onBindViewHolder(TodoListAdapter.ViewHolder holder, final int position) {
         final EditText inputTodo = holder.inputTodo;
         final EditText inputDate = holder.inputDate;
 
-        Spinner spinner = holder.spinner;
-        spinner.setAdapter(new SpinnerAdapterFinance(context, R.layout.finance_row_spinner, context.getResources()
-                .getStringArray(R.array.todo_priority)));
+        final String[] array = context.getResources()
+                .getStringArray(R.array.todo_priority);
+
+        final Spinner spinner = holder.spinner;
+        spinner.setAdapter(new SpinnerAdapterFinance(context, R.layout.finance_row_spinner, array));
 
         inputTodo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -74,12 +77,62 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ViewHo
                     calendar = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(int Year, int Month, int Day) {
-                            inputDate.setText(Day + "\t" + Month + "\t" + Year);
+                            inputDate.setText(Day + "." + Month + "." + Year);
                             inputDate.invalidate();
                         }
                     });
                     calendar.showCalendar();
                 }
+            }
+        });
+
+        todoList.get(position).setPriority(spinner.getSelectedItem().toString());
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                todoList.get(position).setPriority(array[pos]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        inputTodo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().isEmpty()) {
+                    todoList.get(position).setName(s.toString());
+                }
+            }
+        });
+
+        inputDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().isEmpty())
+                    todoList.get(position).setDate(s.toString());
             }
         });
     }

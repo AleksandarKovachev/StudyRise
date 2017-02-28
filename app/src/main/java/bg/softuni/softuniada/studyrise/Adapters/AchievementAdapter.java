@@ -22,14 +22,12 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import bg.softuni.softuniada.studyrise.Achievement;
-import bg.softuni.softuniada.studyrise.Activ;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 
@@ -107,7 +105,7 @@ public class AchievementAdapter extends BaseExpandableListAdapter {
 
         TextView title = (TextView) row.findViewById(R.id.activTitle);
         TextView points = (TextView) row.findViewById(R.id.activPoints);
-        ImageView menu = (ImageView) row.findViewById(R.id.finance_menu);
+        ImageView menu = (ImageView) row.findViewById(R.id.activ_menu);
 
         title.setText(data.get(groupPosition).getTitle());
         points.setText(data.get(groupPosition).getPoints());

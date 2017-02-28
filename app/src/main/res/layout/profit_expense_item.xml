@@ -17,7 +17,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/finance_menu"
+            android:id="@+id/activ_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -31,8 +31,8 @@
             android:id="@+id/value_finance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/finance_menu"
-            android:layout_toStartOf="@+id/finance_menu"
+            android:layout_toLeftOf="@+id/activ_menu"
+            android:layout_toStartOf="@+id/activ_menu"
             android:paddingLeft="10dp"
             android:paddingTop="20dp"
             android:textColor="@color/colorAccent" />
@@ -54,8 +54,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/name_finance"
-            android:layout_toLeftOf="@+id/finance_menu"
-            android:layout_toStartOf="@+id/finance_menu"
+            android:layout_toLeftOf="@+id/activ_menu"
+            android:layout_toStartOf="@+id/activ_menu"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:textSize="10sp" />

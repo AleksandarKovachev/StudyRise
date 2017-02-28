@@ -22,10 +22,10 @@
     </string-array>
 
     <string-array name="todo_priority">
-        <item>Висок приоритет</item>
-        <item>Среден приоритет</item>
-        <item>Нормален приоритет</item>
-        <item>Нисък приоритет</item>
-        <item>Без приоритет</item>
+        <item>Висок приоритет - 1</item>
+        <item>Среден приоритет - 2</item>
+        <item>Нормален приоритет - 3</item>
+        <item>Нисък приоритет - 4</item>
+        <item>Без приоритет - 5</item>
     </string-array>
 </resources>
