@@ -53,16 +53,20 @@ public class ActivFragment extends Fragment {
 
         data = new ArrayList<>();
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+
+        String date = calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH) + 1) + "." + calendar.get(Calendar.YEAR);
+
         DBPref pref = new DBPref(getContext());
 
-        Cursor cursor = pref.getRawQuery("SELECT activTitle, points, todoId, todo.name, todo.date, todo.priority FROM " + DBConstants.ACTIV_TABLE +
-                " JOIN " + DBConstants.TODO_TABLE + " WHERE activ.todoId = todo._id", null);
+        Cursor cursor = pref.getVals(DBConstants.TODO_ACTIV_TABLE, date);
         if (cursor.moveToFirst()) {
             do {
                 TodoActiv activ = new TodoActiv();
-                activ.setTitle(cursor.getString(cursor.getColumnIndex("activTitle")));
+                activ.setTitle(cursor.getString(cursor.getColumnIndex("name")));
                 activ.setPoints(cursor.getString(cursor.getColumnIndex("points")));
-                activ.setName(cursor.getString(cursor.getColumnIndex("name")));
                 activ.setDate(cursor.getString(cursor.getColumnIndex("date")));
                 activ.setPriority(cursor.getString(cursor.getColumnIndex("priority")));
                 data.add(activ);
@@ -73,11 +77,11 @@ public class ActivFragment extends Fragment {
 
         if (c.moveToFirst()) {
             do {
-                if (!containsElement(c.getString(c.getColumnIndex("activTitle")))) {
+                String title = c.getString(c.getColumnIndex("activTitle"));
+                if (!containsElement(title)) {
                     TodoActiv activ = new TodoActiv();
-                    activ.setTitle(c.getString(c.getColumnIndex("activTitle")));
+                    activ.setTitle(title);
                     activ.setPoints(c.getString(c.getColumnIndex("points")));
-                    activ.setTodoId(c.getLong(c.getColumnIndex("todoId")));
                     data.add(activ);
                 }
             } while (c.moveToNext());
@@ -86,12 +90,8 @@ public class ActivFragment extends Fragment {
         c.close();
         pref.close();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.setFirstDayOfWeek(Calendar.MONDAY);
-
         listView = (ExpandableListView) root.findViewById(R.id.list_activ);
-        adapter = new ActivAdapter(getContext(), R.layout.activ_list_item, data, listView, calendar, programId + "");
+        adapter = new ActivAdapter(getContext(), R.layout.activ_list_item, data, listView, programId + "");
         listView.setAdapter(adapter);
         listView.clearFocus();
         listView.animate();

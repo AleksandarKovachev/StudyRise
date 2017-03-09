@@ -30,8 +30,6 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -52,15 +50,13 @@ public class ActivAdapter extends BaseExpandableListAdapter {
     private String number;
     private String finalNumber;
     private String programId;
-    private Calendar calendar;
 
-    public ActivAdapter(Context context, int resource, List<TodoActiv> objects, ExpandableListView listView, Calendar calendar, String programId) {
+    public ActivAdapter(Context context, int resource, List<TodoActiv> objects, ExpandableListView listView, String programId) {
         this.context = context;
         layoutId = resource;
         data = objects;
         this.listView = listView;
         this.programId = programId;
-        this.calendar = calendar;
     }
 
     private void showPopupMenu(View view, int position) {
@@ -120,38 +116,49 @@ public class ActivAdapter extends BaseExpandableListAdapter {
         ImageView menu = (ImageView) row.findViewById(R.id.activ_menu);
         final ImageView priority = (ImageView) row.findViewById(R.id.activ_priority);
 
+        Drawable drawable = null;
         if (data.get(groupPosition).getDate() != null) {
-            String[] date = data.get(groupPosition).getDate().split("\\.");
-
-            int day = Integer.parseInt(date[0]);
-            int month = Integer.parseInt(date[1]);
-            int year = Integer.parseInt(date[2]);
-
-            int priorityNumber = 0;
-
-            if (day == (calendar.get(Calendar.DAY_OF_MONTH)) && month == (calendar.get(Calendar.MONTH) + 1) && year == (calendar.get(Calendar.YEAR))) {
-                priorityNumber = getPriorityPosition(data.get(groupPosition).getPriority(), array);
-                Drawable drawable = null;
+            int priorityNumber = Integer.parseInt(data.get(groupPosition).getPriority());
+            if (groupPosition % 2 != 0) {
                 switch (priorityNumber) {
                     case 0:
-                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_one);
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_one_accent);
                         break;
                     case 1:
-                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_two);
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_two_accent);
                         break;
                     case 2:
-                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_three);
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_three_accent);
                         break;
                     case 3:
-                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_four);
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_four_accent);
                         break;
                     case 4:
-                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_five);
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_five_accent);
                         break;
                 }
-                priority.setImageDrawable(drawable);
-                priority.setVisibility(View.VISIBLE);
+            }else{
+                switch (priorityNumber) {
+                    case 0:
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_one_primary);
+                        break;
+                    case 1:
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_two_primary);
+                        break;
+                    case 2:
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_three_primary);
+                        break;
+                    case 3:
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_four_primary);
+                        break;
+                    case 4:
+                        drawable = context.getResources().getDrawable(R.drawable.ic_priority_five_primary);
+                        break;
+                }
             }
+            priority.setImageDrawable(drawable);
+            priority.setVisibility(View.VISIBLE);
+
             final String priorityValue = array[priorityNumber];
             priority.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -161,11 +168,17 @@ public class ActivAdapter extends BaseExpandableListAdapter {
             });
         }
 
-        title.setText(data.get(groupPosition).getTitle());
-        points.setText(data.get(groupPosition).getPoints());
+        title.setText(data.get(groupPosition).
+
+                getTitle());
+        points.setText(data.get(groupPosition).
+
+                getPoints());
 
         menu.setTag(new Integer(groupPosition));
-        menu.setOnClickListener(new View.OnClickListener() {
+        menu.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 showPopupMenu(v, Integer.parseInt(v.getTag().toString()));
@@ -314,6 +327,7 @@ public class ActivAdapter extends BaseExpandableListAdapter {
             }
             return false;
         }
+
     }
 
     private void dialogChangeItem(final Activ item) {
@@ -354,9 +368,5 @@ public class ActivAdapter extends BaseExpandableListAdapter {
 
         final AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-    }
-
-    private int getPriorityPosition(String priority, String[] array) {
-        return Arrays.asList(array).indexOf(priority);
     }
 }

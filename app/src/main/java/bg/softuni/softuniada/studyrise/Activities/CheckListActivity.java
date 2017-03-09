@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import bg.softuni.softuniada.studyrise.Activ;
@@ -48,10 +49,11 @@ public class CheckListActivity extends AppCompatActivity implements SwipeRefresh
     private Context mContext;
     private int programId;
     private int position = -1;
-    private long foreignId;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private MultiTypeAdapter adapter;
+    private List<Activ> data;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +112,7 @@ public class CheckListActivity extends AppCompatActivity implements SwipeRefresh
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    private void setData(){
+    private void setData() {
 
         adapter.addAll(takeData(), new MultiTypeAdapter.CustomMultiViewTyper() {
 
@@ -129,10 +131,10 @@ public class CheckListActivity extends AppCompatActivity implements SwipeRefresh
     }
 
     private List<LineItem> takeData() {
-        final List<Todo> data = new ArrayList<>();
+        List<LineItem> items = new ArrayList<>();
 
         DBPref pref = new DBPref(this);
-        Cursor c = pref.getVals(DBConstants.TODO_TABLE);
+        Cursor c = pref.getVals(DBConstants.TODO_ACTIV_TABLE, "");
 
         if (c.moveToFirst()) {
             do {
@@ -140,25 +142,23 @@ public class CheckListActivity extends AppCompatActivity implements SwipeRefresh
                 todo.setName(c.getString(c.getColumnIndex("name")));
                 todo.setDate(c.getString(c.getColumnIndex("date")));
                 todo.setPriority(c.getString(c.getColumnIndex("priority")));
-                data.add(todo);
+                todo.setPoints(c.getString(c.getColumnIndex("points")));
+
+                LineItem title = new LineItem(todo.getDate(), true, null);
+                int index = containsElement(items, title);
+                if (index != -1) {
+                    items.add(index + 1, new LineItem(todo.getName(), false, todo.getPoints()));
+                } else {
+                    items.add(title);
+                    items.add(new LineItem(todo.getName(), false, todo.getPoints()));
+                }
+
             } while (c.moveToNext());
         }
 
         c.close();
         pref.close();
 
-        List<LineItem> items = new ArrayList<>();
-
-        for (Todo todo : data) {
-            LineItem title = new LineItem(todo.getDate(), true);
-            int index = containsElement(items, title);
-            if (index != -1) {
-                items.add(index + 1, new LineItem(todo.getName(), false));
-            } else {
-                items.add(title);
-                items.add(new LineItem(todo.getName(), false));
-            }
-        }
         return items;
     }
 
@@ -179,7 +179,7 @@ public class CheckListActivity extends AppCompatActivity implements SwipeRefresh
     public class ItemPresenter implements BaseViewAdapter.Presenter {
 
         public void onStarClick(LineItem item) {
-            Toast.makeText(mContext, "star", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "star" + item.getPoints(), Toast.LENGTH_SHORT).show();
         }
 
         public void onDeleteClick(LineItem item) {
@@ -270,22 +270,15 @@ public class CheckListActivity extends AppCompatActivity implements SwipeRefresh
                 .setPositiveButton("Добави",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Todo todo = new Todo();
-                                todo.setDate(inputDate.getText().toString());
-                                todo.setName(inputTodo.getText().toString());
-                                todo.setPriority(spinner.getSelectedItem().toString());
+                                if (position != -1) {
 
-                                DBPref pref = new DBPref(getApplicationContext());
-                                pref.addRecord(null, DBConstants.TODO_TABLE, todo.getName(), todo.getDate(), todo.getPriority());
+                                    List<String> priorityList = Arrays.asList(getResources().getStringArray(R.array.todo_priority));
 
-                                Cursor cursor = pref.getVals(DBConstants.TODO_TABLE);
-                                cursor.moveToLast();
-                                long _id = cursor.getLong(cursor.getColumnIndex("_id"));
-
-                                cursor.close();
-
-                                pref.execSql("UPDATE " + DBConstants.ACTIV_TABLE + " SET todoId = " + _id + " WHERE _id = " + foreignId + ";");
-                                pref.close();
+                                    DBPref pref = new DBPref(getApplicationContext());
+                                    pref.addRecord(null, DBConstants.TODO_ACTIV_TABLE, data.get(position).getTitle(), data.get(position).getPoints(),
+                                            priorityList.indexOf(spinner.getSelectedItem().toString()) + "", inputDate.getText().toString());
+                                    pref.close();
+                                }
                             }
                         })
                 .setNegativeButton("Отмени",
@@ -347,7 +340,7 @@ public class CheckListActivity extends AppCompatActivity implements SwipeRefresh
 
         alertDialogBuilder.setView(dialogView);
 
-        final List<Activ> data = new ArrayList<>();
+        data = new ArrayList<>();
 
         DBPref pref = new DBPref(this);
         Cursor c = pref.getVals("activ", programId + "");
@@ -365,7 +358,7 @@ public class CheckListActivity extends AppCompatActivity implements SwipeRefresh
         c.close();
         pref.close();
 
-        RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.dialog_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.dialog_recycler_view_todo);
         DialogListAdapter adapter = new DialogListAdapter(this, data);
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);
@@ -380,7 +373,6 @@ public class CheckListActivity extends AppCompatActivity implements SwipeRefresh
                             public void onClick(DialogInterface dialog, int id) {
                                 if (position != -1) {
                                     inputTodo.setText(data.get(position).getTitle());
-                                    foreignId = data.get(position).getId();
                                 }
                             }
                         })

@@ -10,10 +10,12 @@ public class LineItem {
 
     private String content;
     private boolean isTitle;
+    private String points;
 
-    public LineItem(String content, boolean isTitle) {
+    public LineItem(String content, boolean isTitle, String points) {
         this.content = content;
         this.isTitle = isTitle;
+        this.points = points;
     }
 
     public String getContent() {
@@ -30,5 +32,13 @@ public class LineItem {
 
     public void setTitle(boolean title) {
         isTitle = title;
+    }
+
+    public String getPoints() {
+        return points;
+    }
+
+    public void setPoints(String points) {
+        this.points = points;
     }
 }

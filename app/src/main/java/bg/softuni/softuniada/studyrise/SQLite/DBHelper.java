@@ -11,7 +11,7 @@ import java.util.Date;
 public class DBHelper extends SQLiteOpenHelper {
 
     static final String DB_NAME = "studyrise";
-    static final int CURRENT_VERSION = 6;
+    static final int CURRENT_VERSION = 5;
     protected SQLiteDatabase db;
 
     public DBHelper(Context context) {
@@ -32,9 +32,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + "programId integer, "
             + "todoId integer default null,"
             + "FOREIGN KEY(programId) REFERENCES program(_id) "
-            + "ON DELETE CASCADE, "
-            + "FOREIGN KEY(todoId) REFERENCES "
-            + DBConstants.TODO_TABLE + "(_id));";
+            + "ON DELETE CASCADE);";
 
     private final String achievementSql = "create table " + DBConstants.ACHIEVEMENT_TABLE + " ("
             + "_id integer primary key autoincrement, "
@@ -69,10 +67,11 @@ public class DBHelper extends SQLiteOpenHelper {
             + "FOREIGN KEY(programId) REFERENCES program(_id) "
             + "ON DELETE CASCADE);";
 
-    private final String todoSql = "create table " + DBConstants.TODO_TABLE + " (" +
+    private final String todoActivSql = "create table " + DBConstants.TODO_ACTIV_TABLE + " (" +
             "_id integer primary key autoincrement," +
-            "name text not null, " +
-            "priority text not null, " +
+            "name text not null," +
+            "points text not null," +
+            "priority text not null," +
             "date text not null);";
 
     @Override
@@ -96,7 +95,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL(historySql);
 
-        db.execSQL(todoSql);
+        db.execSQL(todoActivSql);
 
     }
 
@@ -125,12 +124,9 @@ public class DBHelper extends SQLiteOpenHelper {
         if (oldVersion < 4) {
             db.execSQL(historySql);
         }
+
         if (oldVersion < 5) {
-            db.execSQL(todoSql);
-        }
-        if (oldVersion < 6) {
-            db.execSQL("ALTER TABLE " + DBConstants.ACTIV_TABLE + " ADD COLUMN todoId integer DEFAULT null, " +
-                    "FOREIGN KEY(todoId) REFERENCES " + DBConstants.TODO_TABLE + "(_id);");
+            db.execSQL(todoActivSql);
         }
     }
 

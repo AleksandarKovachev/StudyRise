@@ -180,7 +180,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ViewHo
         c.close();
         pref.close();
 
-        RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.dialog_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.dialog_recycler_view_todo);
         DialogListAdapter adapter = new DialogListAdapter(context, data);
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);

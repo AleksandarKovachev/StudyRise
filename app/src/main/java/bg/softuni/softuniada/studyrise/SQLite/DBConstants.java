@@ -14,6 +14,6 @@ public class DBConstants {
 
     public static final String HISTORY_TABLE = "history";
 
-    public static final String TODO_TABLE = "todo";
+    public static final String TODO_ACTIV_TABLE = "todo_activ";
 
 }

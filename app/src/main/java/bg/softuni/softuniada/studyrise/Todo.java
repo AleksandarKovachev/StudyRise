@@ -5,6 +5,15 @@ public class Todo {
     private String name;
     private String priority;
     private String date;
+    private String points;
+
+    public String getPoints() {
+        return points;
+    }
+
+    public void setPoints(String points) {
+        this.points = points;
+    }
 
     public String getName() {
         return name;
