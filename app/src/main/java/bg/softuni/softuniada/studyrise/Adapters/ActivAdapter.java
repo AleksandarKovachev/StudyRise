@@ -19,6 +19,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +38,7 @@ import java.util.List;
 import bg.softuni.softuniada.studyrise.Activ;
 import bg.softuni.softuniada.studyrise.Points;
 import bg.softuni.softuniada.studyrise.R;
+import bg.softuni.softuniada.studyrise.SQLite.DBConstants;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
 import bg.softuni.softuniada.studyrise.TodoActiv;
 
@@ -50,13 +53,15 @@ public class ActivAdapter extends BaseExpandableListAdapter {
     private String number;
     private String finalNumber;
     private String programId;
+    private ImageView imageView;
 
-    public ActivAdapter(Context context, int resource, List<TodoActiv> objects, ExpandableListView listView, String programId) {
+    public ActivAdapter(Context context, int resource, List<TodoActiv> objects, ExpandableListView listView, String programId, ImageView imageView) {
         this.context = context;
         layoutId = resource;
         data = objects;
         this.listView = listView;
         this.programId = programId;
+        this.imageView = imageView;
     }
 
     private void showPopupMenu(View view, int position) {
@@ -137,7 +142,7 @@ public class ActivAdapter extends BaseExpandableListAdapter {
                         drawable = context.getResources().getDrawable(R.drawable.ic_priority_five_accent);
                         break;
                 }
-            }else{
+            } else {
                 switch (priorityNumber) {
                     case 0:
                         drawable = context.getResources().getDrawable(R.drawable.ic_priority_one_primary);
@@ -209,7 +214,7 @@ public class ActivAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.chield_list_item, null);
         }
 
-        final Activ activ = (Activ) getChild(gp, chp);
+        final TodoActiv activ = (TodoActiv) getChild(gp, chp);
 
         Button runPoints = (Button) convertView.findViewById(R.id.runPoints);
 
@@ -266,6 +271,8 @@ public class ActivAdapter extends BaseExpandableListAdapter {
                     number = points;
                 Snackbar.make(view, "ИЗПЪЛНИ СЕ: " + activ.getTitle(), Snackbar.LENGTH_LONG).show();
                 finalNumber = (Integer.parseInt(number.toString())) * (Integer.parseInt(activ.getPoints().toString())) + "";
+                if (activ.getDate() != null && activ.getPriority() != null)
+                    finalNumber += 5;
                 profile.setPersonalPoints(finalNumber, context, "activ");
                 EventBus.getDefault().post(new Points(Integer.parseInt(finalNumber)));
 
@@ -274,6 +281,28 @@ public class ActivAdapter extends BaseExpandableListAdapter {
                 SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
                 String date = dateFormat.format(new Date(System.currentTimeMillis()));
                 pref.addRecord(Long.parseLong(programId), "history", "Activ", activ.getTitle(), date, finalNumber);
+
+                if (activ.getDate() != null && activ.getPriority() != null) {
+                    String sql = "delete from " + DBConstants.TODO_ACTIV_TABLE + " where name = \'" + activ.getTitle() + "\' and " +
+                            "date = \'" + activ.getDate() + "\' and priority = \'" + activ.getPriority() + "\' and points = \'" + activ.getPoints() + "\';";
+                    pref.execSql(sql);
+                    activ.setDate(null);
+                    activ.setPriority(null);
+                    data.add(activ);
+                    notifyDataSetChanged();
+                    listView.invalidate();
+                    data.remove(activ);
+                    notifyDataSetChanged();
+                    listView.invalidate();
+
+                    imageView.setVisibility(View.VISIBLE);
+                    Animation zoomout = AnimationUtils.loadAnimation(context, R.anim.zoom_out);
+                    imageView.setAnimation(zoomout);
+
+                    imageView.setVisibility(View.INVISIBLE);
+
+                }
+
                 pref.close();
             }
         });

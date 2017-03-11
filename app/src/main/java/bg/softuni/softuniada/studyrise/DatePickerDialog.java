@@ -37,6 +37,10 @@ public class DatePickerDialog {
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+        datePicker.setMinDate(calendar.getTimeInMillis() - 1000);
+
         YEAR = calendar.get(Calendar.YEAR);
         MONTH = calendar.get(Calendar.MONTH) + 1;
         DAY = calendar.get(Calendar.DAY_OF_MONTH);

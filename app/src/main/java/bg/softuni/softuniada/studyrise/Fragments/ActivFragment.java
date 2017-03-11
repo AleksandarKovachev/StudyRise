@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -90,8 +91,10 @@ public class ActivFragment extends Fragment {
         c.close();
         pref.close();
 
+        ImageView imageView = (ImageView) root.findViewById(R.id.todo_done);
+
         listView = (ExpandableListView) root.findViewById(R.id.list_activ);
-        adapter = new ActivAdapter(getContext(), R.layout.activ_list_item, data, listView, programId + "");
+        adapter = new ActivAdapter(getContext(), R.layout.activ_list_item, data, listView, programId + "", imageView);
         listView.setAdapter(adapter);
         listView.clearFocus();
         listView.animate();

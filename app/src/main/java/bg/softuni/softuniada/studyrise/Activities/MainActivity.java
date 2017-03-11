@@ -23,6 +23,7 @@ import bg.softuni.softuniada.studyrise.Fragments.QuestionsFragment;
 import bg.softuni.softuniada.studyrise.Fragments.RegistrationFragment;
 import bg.softuni.softuniada.studyrise.Navigation.FragmentDrawer;
 import bg.softuni.softuniada.studyrise.R;
+import bg.softuni.softuniada.studyrise.Services.PastDates;
 
 import static bg.softuni.softuniada.studyrise.R.string.username;
 
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent mServiceIntent = new Intent(this, PastDates.class);
+        startService(mServiceIntent);
 
 //        String extra = getIntent().getStringExtra("LOGIN");
 //

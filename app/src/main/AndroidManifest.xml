@@ -52,6 +52,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.ProductivityActivity" />
         </activity>
+        <service
+            android:name=".Services.PastDates"
+            android:exported="false"/>
     </application>
 
 </manifest>

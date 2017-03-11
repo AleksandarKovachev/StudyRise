@@ -86,7 +86,7 @@ public class DBPref extends DBHelper {
     public void deleteRecord(String table, String... value) {
         db.execSQL("delete from  " + table +
                 " where " + value[0] + "=\'" + value[2] +
-                "\' and " + value[1] + " = \'" + value[3] + "\'");
+                "\' and " + value[1] + " = \'" + value[3] + "\' LIMIT 1");
     }
 
     public Cursor getRawQuery(String sql, String[] params) {
