@@ -1,5 +1,6 @@
 package bg.softuni.softuniada.studyrise.Activities;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;

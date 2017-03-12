@@ -1,5 +1,7 @@
 package bg.softuni.softuniada.studyrise.Activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,6 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import bg.softuni.softuniada.studyrise.Adapters.ViewPagerAdapter;
 import bg.softuni.softuniada.studyrise.Fragments.LoginFragment;
 import bg.softuni.softuniada.studyrise.Fragments.Programs;
@@ -23,6 +28,7 @@ import bg.softuni.softuniada.studyrise.Fragments.QuestionsFragment;
 import bg.softuni.softuniada.studyrise.Fragments.RegistrationFragment;
 import bg.softuni.softuniada.studyrise.Navigation.FragmentDrawer;
 import bg.softuni.softuniada.studyrise.R;
+import bg.softuni.softuniada.studyrise.Services.NotificationPublisher;
 import bg.softuni.softuniada.studyrise.Services.PastDates;
 
 import static bg.softuni.softuniada.studyrise.R.string.username;
@@ -37,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     private boolean log;
     private String programId;
 
-    private static TextView textView;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         Intent mServiceIntent = new Intent(this, PastDates.class);
         startService(mServiceIntent);
+
+        scheduleNotification();
 
 //        String extra = getIntent().getStringExtra("LOGIN");
 //
@@ -177,7 +185,27 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         return true;
     }
 
-    public static void setText(String text) {
+    public void setText(String text) {
         textView.setText(text);
+    }
+
+    private void scheduleNotification() {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.setTime(new Date());
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, (calendar.get(Calendar.MONTH)));
+        cal.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+        cal.set(Calendar.DAY_OF_MONTH, (calendar.get(Calendar.DAY_OF_MONTH) + 1));
+        cal.set(Calendar.HOUR_OF_DAY, 9);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+
+        Intent intent = new Intent(this, NotificationPublisher.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
     }
 }

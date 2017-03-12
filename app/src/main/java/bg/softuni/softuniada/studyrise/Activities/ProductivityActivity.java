@@ -1,5 +1,6 @@
 package bg.softuni.softuniada.studyrise.Activities;
 
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,6 +40,7 @@ import bg.softuni.softuniada.studyrise.DateType;
 import bg.softuni.softuniada.studyrise.Fragments.AchievementsFragment;
 import bg.softuni.softuniada.studyrise.Fragments.ActivFragment;
 import bg.softuni.softuniada.studyrise.Fragments.OverviewProductivityFragment;
+import bg.softuni.softuniada.studyrise.NotificationConstants;
 import bg.softuni.softuniada.studyrise.Program;
 import bg.softuni.softuniada.studyrise.R;
 import bg.softuni.softuniada.studyrise.SQLite.DBPref;
@@ -62,6 +64,9 @@ public class ProductivityActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        NotificationManager notificationManager = (NotificationManager) (getSystemService(NOTIFICATION_SERVICE));
+        notificationManager.cancel(NotificationConstants.PRODUCTIVITY_NOTIFICATION);
 
         final ActionBar actionBar = getSupportActionBar();
 

@@ -78,7 +78,7 @@ public class ProgramsAdapter extends RecyclerView.Adapter<ProgramsAdapter.Progra
     }
 
     @Override
-    public void onBindViewHolder(ProgramViewHolder holder, final int position) {
+    public void onBindViewHolder(final ProgramViewHolder holder, final int position) {
         YoYo.with(Techniques.FadeInUp).playOn(holder.cardView);
 
         if (data.size() != 0)
@@ -105,28 +105,30 @@ public class ProgramsAdapter extends RecyclerView.Adapter<ProgramsAdapter.Progra
         holder.cardView.setOnClickListener(new View.OnClickListener() {
                                                @Override
                                                public void onClick(View v) {
-                                                   Program program = data.get(position);
+                                                   if (holder.type.getText().equals("Продуктивност")) {
+                                                       Program program = data.get(position);
 
-                                                   Profile profile = new Profile();
+                                                       Profile profile = new Profile();
 
-                                                   profile.setId(program.getId());
+                                                       profile.setId(program.getId());
 
-                                                   profile.setPersonalPoints("0", context, "");
-                                                   profile.setDailyGoals(0 + "");
+                                                       profile.setPersonalPoints("0", context, "");
+                                                       profile.setDailyGoals(0 + "");
 
-                                                   SharedPreferences preferences = context.getSharedPreferences("Program", 0);
-                                                   SharedPreferences.Editor editor = preferences.edit();
-                                                   editor.putString("program", program.getId() + "");
-                                                   editor.commit();
+                                                       SharedPreferences preferences = context.getSharedPreferences("Program", 0);
+                                                       SharedPreferences.Editor editor = preferences.edit();
+                                                       editor.putString("program", program.getId() + "");
+                                                       editor.commit();
 
-                                                   String[] array = context.getResources().getStringArray(R.array.programs);
+                                                       String[] array = context.getResources().getStringArray(R.array.programs);
 
-                                                   if (program.getProgram_type().equals(array[1])) {
-                                                       Intent intent = new Intent(context, ProductivityActivity.class);
-                                                       context.startActivity(intent);
-                                                   } else {
-                                                       Intent intent = new Intent(context, FinanceActivity.class);
-                                                       context.startActivity(intent);
+                                                       if (program.getProgram_type().equals(array[1])) {
+                                                           Intent intent = new Intent(context, ProductivityActivity.class);
+                                                           context.startActivity(intent);
+                                                       } else {
+                                                           Intent intent = new Intent(context, FinanceActivity.class);
+                                                           context.startActivity(intent);
+                                                       }
                                                    }
                                                }
                                            }

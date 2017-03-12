@@ -12,7 +12,6 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -51,7 +50,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import bg.softuni.softuniada.studyrise.Activities.MainActivity;
 import bg.softuni.softuniada.studyrise.Adapters.HistoryAdapter;
 import bg.softuni.softuniada.studyrise.DateChart;
 import bg.softuni.softuniada.studyrise.DateType;
@@ -97,7 +95,6 @@ public class OverviewProductivityFragment extends Fragment implements OnChartVal
         profile.setId(Long.parseLong(programId));
 
         if (points != null) {
-            MainActivity.setText(points.toString());
             profile.setPersonalPoints(points, getContext(), "");
 
             list = new ArrayList<>();

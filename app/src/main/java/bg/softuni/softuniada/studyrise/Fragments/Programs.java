@@ -1,20 +1,15 @@
 package bg.softuni.softuniada.studyrise.Fragments;
 
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,23 +84,6 @@ public class Programs extends Fragment implements View.OnClickListener {
 
         addProgram = (Button) root.findViewById(R.id.addProgramForProductivity);
         addProgram.setOnClickListener(this);
-
-        Button notification = (Button) root.findViewById(R.id.notification);
-
-        notification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(getContext())
-                                .setSmallIcon(R.drawable.ic_logo)
-                                .setContentTitle("ПАНДИИИИ")
-                                .setContentText("Здравей, Елена!");
-                NotificationManager mNotificationManager =
-                        (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotificationManager.notify(1, mBuilder.build());
-
-            }
-        });
 
         return root;
     }

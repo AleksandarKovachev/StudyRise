@@ -3,10 +3,6 @@ package bg.softuni.softuniada.studyrise;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import org.greenrobot.eventbus.EventBus;
-
-import bg.softuni.softuniada.studyrise.Activities.MainActivity;
-
 public class Profile {
     private String personalPoints;
     private String dailyGoals;
@@ -42,7 +38,6 @@ public class Profile {
             } else
                 this.personalPoints = personalPoints;
         }
-        MainActivity.setText(personalPoints);
     }
 
     private void savePoints(Context context) {
@@ -59,5 +54,4 @@ public class Profile {
     public void setDailyGoals(String dailyGoals) {
         this.dailyGoals = dailyGoals;
     }
-
 }
