@@ -125,10 +125,10 @@ public class ProgramsAdapter extends RecyclerView.Adapter<ProgramsAdapter.Progra
                                                        if (program.getProgram_type().equals(array[1])) {
                                                            Intent intent = new Intent(context, ProductivityActivity.class);
                                                            context.startActivity(intent);
-                                                       } else {
-                                                           Intent intent = new Intent(context, FinanceActivity.class);
-                                                           context.startActivity(intent);
                                                        }
+                                                   }else {
+                                                       Intent intent = new Intent(context, FinanceActivity.class);
+                                                       context.startActivity(intent);
                                                    }
                                                }
                                            }
